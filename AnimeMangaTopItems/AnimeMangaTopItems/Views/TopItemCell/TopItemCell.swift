@@ -34,12 +34,23 @@ internal final class TopItemCell: UICollectionViewCell {
     private func setupUI() {
         addSubviews()
         setupConstraints()
+        
+        backgroundColor = .white
 
         imgView.contentMode = .scaleAspectFit
-
-        backgroundColor = .systemBlue
+        
+        titleLabel.numberOfLines = 0
+        titleLabel.font = .preferredFont(forTextStyle: .title2)
+        
+        rankLabel.font = .preferredFont(forTextStyle: .headline)
+        
         airedLabel.text = "aired"
+        airedLabel.font = .preferredFont(forTextStyle: .callout)
+        
         toLabel.text = "to"
+        [startLabel, toLabel, endLabel].forEach {
+            $0.font = .preferredFont(forTextStyle: .body)
+        }
     }
 
     private func addSubviews() {
@@ -58,36 +69,35 @@ internal final class TopItemCell: UICollectionViewCell {
             imgView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1),
             imgView.widthAnchor.constraint(equalTo: imgView.heightAnchor, multiplier: 2/3),
 
-            titleLabel.topAnchor.constraint(equalTo: imgView.topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: imgView.trailingAnchor, constant: 5),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
-            titleLabel.heightAnchor.constraint(equalTo: imgView.heightAnchor, multiplier: 0.25),
-
-            rankLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-            rankLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            rankLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            rankLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor),
-
-            airedLabel.topAnchor.constraint(equalTo: rankLabel.bottomAnchor),
-            airedLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            airedLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            airedLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor),
+            rankLabel.topAnchor.constraint(equalTo: imgView.topAnchor),
+            rankLabel.leadingAnchor.constraint(equalTo: imgView.trailingAnchor, constant: 5),
+            rankLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            rankLabel.heightAnchor.constraint(lessThanOrEqualTo: imgView.heightAnchor, multiplier: 0.2),
+            
+            titleLabel.topAnchor.constraint(equalTo: rankLabel.bottomAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: rankLabel.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: rankLabel.trailingAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: airedLabel.topAnchor),
+            
+            airedLabel.leadingAnchor.constraint(equalTo: rankLabel.leadingAnchor),
+            airedLabel.trailingAnchor.constraint(equalTo: rankLabel.trailingAnchor),
+            airedLabel.heightAnchor.constraint(lessThanOrEqualTo: imgView.heightAnchor, multiplier: 0.2),
 
             startLabel.topAnchor.constraint(equalTo: airedLabel.bottomAnchor),
-            startLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            startLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor),
-            startLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor, multiplier: 0.45),
-
+            startLabel.leadingAnchor.constraint(equalTo: rankLabel.leadingAnchor),
+            startLabel.bottomAnchor.constraint(equalTo: imgView.bottomAnchor),
+            startLabel.widthAnchor.constraint(lessThanOrEqualTo: titleLabel.widthAnchor, multiplier: 0.4),
+            startLabel.heightAnchor.constraint(lessThanOrEqualTo: imgView.heightAnchor, multiplier: 0.2),
+            
             toLabel.topAnchor.constraint(equalTo: startLabel.topAnchor),
             toLabel.leadingAnchor.constraint(equalTo: startLabel.trailingAnchor),
-            toLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor),
-            toLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor, multiplier: 0.1),
+            toLabel.bottomAnchor.constraint(equalTo: startLabel.bottomAnchor),
+            toLabel.widthAnchor.constraint(lessThanOrEqualTo: titleLabel.widthAnchor, multiplier: 0.2),
 
             endLabel.topAnchor.constraint(equalTo: startLabel.topAnchor),
             endLabel.leadingAnchor.constraint(equalTo: toLabel.trailingAnchor),
-            endLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor),
-            endLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor, multiplier: 0.45)
-
+            endLabel.bottomAnchor.constraint(equalTo: startLabel.bottomAnchor),
+            endLabel.trailingAnchor.constraint(lessThanOrEqualTo: rankLabel.trailingAnchor),
         ])
     }
 
@@ -98,7 +108,7 @@ internal final class TopItemCell: UICollectionViewCell {
     func setup(to viewModel: TopItemCellable) {
         cancelLoading()
         titleLabel.text = viewModel.title
-        rankLabel.text = String(viewModel.rank)
+        rankLabel.text = "Rank: \(viewModel.rank)"
         startLabel.text = viewModel.start
         endLabel.text = viewModel.end
         toLabel.isHidden = viewModel.end == nil
