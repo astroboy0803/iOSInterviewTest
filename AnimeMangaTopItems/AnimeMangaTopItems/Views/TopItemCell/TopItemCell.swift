@@ -40,8 +40,6 @@ internal final class TopItemCell: UICollectionViewCell {
         backgroundColor = .systemBlue
         airedLabel.text = "aired"
         toLabel.text = "to"
-//        startLabel.text = "Oct 2, 2011"
-//        endLabel.text = "Sep 24, 2014"
     }
 
     private func addSubviews() {
@@ -97,14 +95,14 @@ internal final class TopItemCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setup(to viewModel: TopItemViewModel) {
+    func setup(to viewModel: TopItemCellable) {
         cancelLoading()
         titleLabel.text = viewModel.title
         rankLabel.text = String(viewModel.rank)
         startLabel.text = viewModel.start
         endLabel.text = viewModel.end
         toLabel.isHidden = viewModel.end == nil
-        cancellable = viewModel.loader?
+        cancellable = viewModel.loader
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] image in
                 self.showImage(image: image)

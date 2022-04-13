@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 
 internal final class MainView: UIView {
 
@@ -9,16 +10,29 @@ internal final class MainView: UIView {
     private var allViews: [UIView] {
         [segControl, collectionView]
     }
+    
+    let selected: CurrentValueSubject<Int, Never>
 
-    init(items: [String]) {
-        segControl = .init(items: items)
-        segControl.selectedSegmentIndex = .zero
+    init(items: [Top]) {
+        selected = .init(.zero)
+        segControl = .init(items: items.map { $0.title })
 
         // TODO
         collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         super.init(frame: .zero)
 
+        segControl.selectedSegmentIndex = selected.value
         setupViews()
+        setupEvent()
+    }
+    
+    private func setupEvent() {
+        segControl.addTarget(self, action: #selector(toggle(sender:)), for: .valueChanged)
+    }
+    
+    @objc
+    private func toggle(sender: UISegmentedControl) {
+        selected.value = sender.selectedSegmentIndex
     }
 
     required init?(coder: NSCoder) {

@@ -8,6 +8,19 @@ internal final class NetworkService: NetworkServiceType {
         case request
         case response
         case status(code: Int, data: Data)
+        
+        var message: String {
+            switch self {
+            case .url:
+                return "網址有誤"
+            case .request:
+                return "請求失敗"
+            case .response:
+                return "回應失敗"
+            case let .status(code, _):
+                return "回應狀態有誤(code=\(code))"
+            }
+        }
     }
 
     func fetchAnime(page: Int) -> AnyPublisher<AnimeModel, Error> {

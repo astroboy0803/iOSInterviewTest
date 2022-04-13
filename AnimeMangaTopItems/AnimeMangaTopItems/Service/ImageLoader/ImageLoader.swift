@@ -11,7 +11,6 @@ internal final class ImageLoader: ImageLoaderType {
 
     func loadImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
         if let image = cache.image(url: url) {
-            print(">>> get cache image")
             return Just(image)
                 .eraseToAnyPublisher()
         }

@@ -1,8 +1,9 @@
 import UIKit
 import Combine
+import SafariServices
 
 class MainViewController: UIViewController {
-
+    
     private let mainView: MainView
 
     private let viewModel: MainViewModel
@@ -10,10 +11,13 @@ class MainViewController: UIViewController {
     private var cancellables: Set<AnyCancellable>
 
     private let imgLoader: ImageLoader
+    
+    private let servicesProvider: ServicesProvider
 
-    init() {
-        mainView = .init(items: ["Anime", "Manga"])
-        viewModel = .init()
+    init(servicesProvider: ServicesProvider) {
+        mainView = .init(items: Top.allCases)
+        self.servicesProvider = servicesProvider
+        viewModel = .init(top: Top.allCases[mainView.selected.value], serviceProvider: servicesProvider)
         cancellables = []
         imgLoader = .init()
         super.init(nibName: nil, bundle: nil)
@@ -25,12 +29,31 @@ class MainViewController: UIViewController {
     }
 
     private func setBinding() {
-        viewModel.datas
+        mainView.selected
+            .sink { value in
+                guard let top = Top(rawValue: value) else {
+                    return
+                }
+                self.viewModel.change(top: top)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.dataSubject
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 self.mainView.collectionView.reloadData()
             }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
+        
+        viewModel.message
+            .receive(on: DispatchQueue.main)
+            .sink { message in
+                let alert = UIAlertController(title: message, message: "", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "確定", style: .default, handler: nil)
+                alert.addAction(okAction)
+                self.present(alert, animated: true)
+            }
+            .store(in: &cancellables)
     }
 
     required init?(coder: NSCoder) {
@@ -43,9 +66,10 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // TODO
-        viewModel.loadTest()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
 }
 
@@ -55,20 +79,37 @@ extension MainViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.datas.value.count
+        viewModel.dataSubject.value.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopItemCell.reuseIdentifier, for: indexPath)
         if let topItemCell = cell as? TopItemCell {
-            let data = viewModel.datas.value[indexPath.item]
-            topItemCell.setup(to: .init(title: data.title, rank: data.rank, start: data.aired.from.description, end: data.aired.to?.description, loader: imgLoader.loadImage(from: data.images.jpg.image_url)))
+            let item = viewModel.dataSubject.value[indexPath.item]
+            topItemCell.setup(to: item)
         }
         return cell
     }
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = viewModel.dataSubject.value[indexPath.item]
+        switch item.url {
+        case let .success(url):
+            // TODO: refactor
+            let safariVC = SFSafariViewController(url: url)
+            safariVC.modalPresentationStyle = .popover
+            self.present(safariVC, animated: true)
+        case let .failure(error):
+            switch error {
+            case let .invalid(msg):
+                viewModel.message.send(msg)
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         .init(top: 5, left: 0, bottom: 0, right: 0)
     }

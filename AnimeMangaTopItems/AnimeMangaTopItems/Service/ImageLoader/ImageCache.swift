@@ -51,6 +51,6 @@ internal final class ImageCache: NSObject, ImageCacheType {
 
 extension ImageCache: NSCacheDelegate {
     func cache(_ cache: NSCache<AnyObject, AnyObject>, willEvictObject obj: Any) {
-        print("remove cache ... \(obj)")
+        
     }
 }
