@@ -24,6 +24,8 @@ internal final class MainViewModel {
     
     let message: PassthroughSubject<String, Never>
     
+    let linkURL: PassthroughSubject<URL, Never>
+    
     private var animeCurrentPage: Int
     private var animeLastPage: Int
     
@@ -41,6 +43,7 @@ internal final class MainViewModel {
         dataSubject = .init([])
         currentTop = .init(top)
         message = .init()
+        linkURL = .init()
         self.serviceProvider = serviceProvider
         
         animeCurrentPage = .zero
@@ -148,7 +151,16 @@ internal final class MainViewModel {
         }
     }
     
+    // MARK: - Input
     func change(top: Top) {
         self.currentTop.value = top
+    }
+    
+    func linkTo(url: URL) {
+        linkURL.send(url)
+    }
+    
+    func alert(msg: String) {
+        message.send(msg)
     }
 }

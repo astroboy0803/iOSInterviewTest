@@ -54,6 +54,15 @@ class MainViewController: UIViewController {
                 self.present(alert, animated: true)
             }
             .store(in: &cancellables)
+        
+        viewModel.linkURL
+            .receive(on: DispatchQueue.main)
+            .sink { url in
+                let safariVC = SFSafariViewController(url: url)
+                safariVC.modalPresentationStyle = .popover
+                self.present(safariVC, animated: true)
+            }
+            .store(in: &cancellables)
     }
 
     required init?(coder: NSCoder) {
@@ -98,14 +107,11 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         let item = viewModel.dataSubject.value[indexPath.item]
         switch item.url {
         case let .success(url):
-            // TODO: refactor
-            let safariVC = SFSafariViewController(url: url)
-            safariVC.modalPresentationStyle = .popover
-            self.present(safariVC, animated: true)
+            viewModel.linkTo(url: url)
         case let .failure(error):
             switch error {
             case let .invalid(msg):
-                viewModel.message.send(msg)
+                viewModel.alert(msg: msg)
             }
         }
     }

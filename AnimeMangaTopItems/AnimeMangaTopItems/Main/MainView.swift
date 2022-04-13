@@ -41,6 +41,7 @@ internal final class MainView: UIView {
 
     private func setupViews() {
         backgroundColor = .white
+        collectionView.backgroundColor = .white
 
         segControl.setTitleTextAttributes([
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .headline)
@@ -68,8 +69,8 @@ internal final class MainView: UIView {
             segControl.centerXAnchor.constraint(equalTo: centerXAnchor),
             segControl.widthAnchor.constraint(equalTo: widthAnchor, constant: -20),
             collectionView.topAnchor.constraint(equalTo: segControl.bottomAnchor, constant: 10),
-            collectionView.leadingAnchor.constraint(equalTo: segControl.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: segControl.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -10)
         ])
     }
