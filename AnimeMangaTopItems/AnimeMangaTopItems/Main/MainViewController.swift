@@ -9,22 +9,27 @@ class MainViewController: UIViewController {
     private let viewModel: MainViewModel
 
     private var cancellables: Set<AnyCancellable>
+    
+    private var cellCancellables: [String: AnyCancellable]
 
     private let imgLoader: ImageLoader
     
     private let servicesProvider: ServicesProvider
+    
+    private lazy var dataSource = makeDataSource()
 
     init(servicesProvider: ServicesProvider) {
-        mainView = .init(items: Top.allCases)
+        mainView = .init(items: Top.allCases, layout: Self.collectionViewLayout)
         self.servicesProvider = servicesProvider
         viewModel = .init(top: Top.allCases[mainView.selected.value], serviceProvider: servicesProvider)
         cancellables = []
         imgLoader = .init()
+        cellCancellables = [:]
         super.init(nibName: nil, bundle: nil)
         setBinding()
 
         mainView.collectionView.register(TopItemCell.self, forCellWithReuseIdentifier: TopItemCell.reuseIdentifier)
-        mainView.collectionView.dataSource = self
+        mainView.collectionView.dataSource = dataSource
         mainView.collectionView.delegate = self
     }
 
@@ -40,9 +45,7 @@ class MainViewController: UIViewController {
         
         viewModel.dataSubject
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.mainView.collectionView.reloadData()
-            }
+            .sink(receiveValue: self.applySnapshot(_:))
             .store(in: &cancellables)
         
         viewModel.message
@@ -72,7 +75,7 @@ class MainViewController: UIViewController {
     override func loadView() {
         view = mainView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -82,29 +85,44 @@ class MainViewController: UIViewController {
     }
 }
 
-extension MainViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.dataSubject.value.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopItemCell.reuseIdentifier, for: indexPath)
-        if let topItemCell = cell as? TopItemCell {
-            let item = viewModel.dataSubject.value[indexPath.item]
-            topItemCell.setup(to: item)
+// MARK: - Diff Data Source
+extension MainViewController {
+    private func makeDataSource() -> UICollectionViewDiffableDataSource<Int, TopItemViewModel> {
+        let dataSource = UICollectionViewDiffableDataSource<Int, TopItemViewModel>(collectionView: mainView.collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopItemCell.reuseIdentifier, for: indexPath)
+            if let topItemCell = cell as? TopItemCell {
+                let item = self.viewModel.item(indexPath: indexPath)
+                topItemCell.setup(to: item)
+                self.cellCancellables[topItemCell.cellID]?.cancel()
+                self.cellCancellables.removeValue(forKey: topItemCell.cellID)
+                self.cellCancellables[topItemCell.cellID] = topItemCell.isFavor
+                    .sink(receiveValue: { info in
+                        guard info.dataID == item.id else {
+                            return
+                        }
+                        self.viewModel.favor(id: info.dataID, isFavor: info.isFavor)
+                    })
+            }
+            return cell
         }
-        return cell
+        
+        return dataSource
+    }
+    
+    private func applySnapshot(_ model: [TopItemViewModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, TopItemViewModel>()
+        // 只有一個section, 就直接放整數
+        let section: Int = .zero
+        snapshot.appendSections([section])
+        snapshot.appendItems(model, toSection: section)
+        self.dataSource.apply(snapshot)
     }
 }
 
-extension MainViewController: UICollectionViewDelegateFlowLayout {
+extension MainViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = viewModel.dataSubject.value[indexPath.item]
+        let item = viewModel.item(indexPath: indexPath)
         switch item.url {
         case let .success(url):
             viewModel.linkTo(url: url)
@@ -115,19 +133,29 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
             }
         }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        .init(top: 5, left: 0, bottom: 0, right: 0)
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: collectionView.frame.width - 10, height: 150)
-    }
+}
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        5
-    }
+// MARK: - Compositional Layout
+extension MainViewController {
+    static var collectionViewLayout: UICollectionViewCompositionalLayout {
+        // grid
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.5))
+        
+        // 水平
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        // contentInsets就像css的padding -> 內縮 留白
+        // contentOffsets就像css的margin -> 設定邊界
+        group.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8)
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        5
+        // section間格
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2)
+
+        return UICollectionViewCompositionalLayout(section: section)
     }
 }

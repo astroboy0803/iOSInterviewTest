@@ -2,6 +2,11 @@ import UIKit
 import Combine
 
 internal final class TopItemCell: UICollectionViewCell {
+    struct FavorInfo {
+        let dataID: String
+        var isFavor: Bool
+    }
+    
     static let reuseIdentifier = "TopItemCell"
 
     private let imgView: UIImageView
@@ -11,13 +16,21 @@ internal final class TopItemCell: UICollectionViewCell {
     private let startLabel: UILabel
     private let toLabel: UILabel
     private let endLabel: UILabel
+    
+    private let favorButton: UIButton
 
-    private var cancellable: AnyCancellable?
+    private var imgCancellable: AnyCancellable?
+    
+    private var favorCancellable: AnyCancellable?
 
     private var allViews: [UIView] {
-        [imgView, titleLabel, rankLabel, airedLabel, startLabel, toLabel, endLabel]
+        [imgView, titleLabel, favorButton, rankLabel, airedLabel, startLabel, toLabel, endLabel]
     }
-
+    
+    let isFavor: CurrentValueSubject<FavorInfo, Never>
+    
+    let cellID: String
+    
     override init(frame: CGRect) {
         imgView = .init()
         titleLabel = .init()
@@ -26,9 +39,13 @@ internal final class TopItemCell: UICollectionViewCell {
         startLabel = .init()
         toLabel = .init()
         endLabel = .init()
+        favorButton = .init()
+        isFavor = .init(FavorInfo(dataID: "", isFavor: false))
+        cellID = UUID().uuidString
         super.init(frame: frame)
 
         setupUI()
+        setupEvent()
     }
 
     private func setupUI() {
@@ -45,14 +62,17 @@ internal final class TopItemCell: UICollectionViewCell {
         rankLabel.font = .preferredFont(forTextStyle: .headline)
         
         airedLabel.text = "aired"
-        airedLabel.font = .preferredFont(forTextStyle: .callout)
+        airedLabel.font = .preferredFont(forTextStyle: .subheadline)
+        
+        favorButton.tintColor = .systemRed
         
         toLabel.text = "to"
+        toLabel.textAlignment = .center
         [startLabel, toLabel, endLabel].forEach {
-            $0.font = .preferredFont(forTextStyle: .body)
+            $0.font = .preferredFont(forTextStyle: .callout)
         }
     }
-
+    
     private func addSubviews() {
         allViews.forEach {
             addSubview($0)
@@ -68,11 +88,16 @@ internal final class TopItemCell: UICollectionViewCell {
             imgView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imgView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1),
             imgView.widthAnchor.constraint(equalTo: imgView.heightAnchor, multiplier: 2/3),
-
+            
             rankLabel.topAnchor.constraint(equalTo: imgView.topAnchor),
             rankLabel.leadingAnchor.constraint(equalTo: imgView.trailingAnchor, constant: 5),
             rankLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
             rankLabel.heightAnchor.constraint(lessThanOrEqualTo: imgView.heightAnchor, multiplier: 0.2),
+            
+            favorButton.centerYAnchor.constraint(equalTo: rankLabel.centerYAnchor),
+            favorButton.trailingAnchor.constraint(equalTo: rankLabel.trailingAnchor),
+            favorButton.widthAnchor.constraint(equalToConstant: 50),
+            favorButton.heightAnchor.constraint(equalToConstant: 50),
             
             titleLabel.topAnchor.constraint(equalTo: rankLabel.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: rankLabel.leadingAnchor),
@@ -92,13 +117,28 @@ internal final class TopItemCell: UICollectionViewCell {
             toLabel.topAnchor.constraint(equalTo: startLabel.topAnchor),
             toLabel.leadingAnchor.constraint(equalTo: startLabel.trailingAnchor),
             toLabel.bottomAnchor.constraint(equalTo: startLabel.bottomAnchor),
-            toLabel.widthAnchor.constraint(lessThanOrEqualTo: titleLabel.widthAnchor, multiplier: 0.2),
+            toLabel.widthAnchor.constraint(equalToConstant: 20),
 
             endLabel.topAnchor.constraint(equalTo: startLabel.topAnchor),
             endLabel.leadingAnchor.constraint(equalTo: toLabel.trailingAnchor),
             endLabel.bottomAnchor.constraint(equalTo: startLabel.bottomAnchor),
             endLabel.trailingAnchor.constraint(lessThanOrEqualTo: rankLabel.trailingAnchor),
         ])
+    }
+    
+    private func setupEvent() {
+        favorButton.addTarget(self, action: #selector(toggle(sender:)), for: .touchUpInside)
+        favorCancellable = isFavor
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { value in
+                let imgName = value.isFavor ? "heart.fill" : "heart"
+                self.favorButton.setImage(.init(systemName: imgName), for: .normal)
+            })
+    }
+    
+    @objc
+    private func toggle(sender: UIButton) {
+        isFavor.value.isFavor.toggle()
     }
 
     required init?(coder: NSCoder) {
@@ -112,11 +152,12 @@ internal final class TopItemCell: UICollectionViewCell {
         startLabel.text = viewModel.start
         endLabel.text = viewModel.end
         toLabel.isHidden = viewModel.end == nil
-        cancellable = viewModel.loader
+        imgCancellable = viewModel.loader
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] image in
                 self.showImage(image: image)
             })
+        isFavor.value = .init(dataID: viewModel.id, isFavor: viewModel.isFavor)
     }
 
     private func showImage(image: UIImage?) {
@@ -131,6 +172,6 @@ internal final class TopItemCell: UICollectionViewCell {
 
     private func cancelLoading() {
         imgView.image = nil
-        cancellable?.cancel()
+        imgCancellable?.cancel()
     }
 }

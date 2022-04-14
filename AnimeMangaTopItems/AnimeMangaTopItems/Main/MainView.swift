@@ -13,12 +13,10 @@ internal final class MainView: UIView {
     
     let selected: CurrentValueSubject<Int, Never>
 
-    init(items: [Top]) {
+    init(items: [Top], layout: UICollectionViewLayout = UICollectionViewFlowLayout()) {
         selected = .init(.zero)
         segControl = .init(items: items.map { $0.title })
-
-        // TODO
-        collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView = .init(frame: .zero, collectionViewLayout: layout)
         super.init(frame: .zero)
 
         segControl.selectedSegmentIndex = selected.value

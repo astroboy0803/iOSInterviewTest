@@ -20,7 +20,7 @@ internal final class MainViewModel {
         }
     }
     
-    let dataSubject: CurrentValueSubject<[TopItemViewModel], Never>
+    let dataSubject: PassthroughSubject<[TopItemViewModel], Never>
     
     let message: PassthroughSubject<String, Never>
     
@@ -34,13 +34,17 @@ internal final class MainViewModel {
     
     private let serviceProvider: ServicesProvider
     
-    private let dateFormat: String
+    private let datePattern: String
+    
+    private var favorAnimes: CurrentValueSubject<Set<String>, Never>
+    
+    private var favorMangas: CurrentValueSubject<Set<String>, Never>
     
     init(top: Top, serviceProvider: ServicesProvider) {
         cancellables = []
         animeItems = .init([])
         mangaItems = .init([])
-        dataSubject = .init([])
+        dataSubject = .init()
         currentTop = .init(top)
         message = .init()
         linkURL = .init()
@@ -50,7 +54,10 @@ internal final class MainViewModel {
         animeLastPage = .max
         mangaCurrentPage = .zero
         mangaLastPage = .max
-        dateFormat = "d LLL, yyyy"
+        datePattern = "d LLL, yyyy"
+        
+        favorAnimes = .init(Set(UserDefaults.standard.anime))
+        favorMangas = .init(Set(UserDefaults.standard.manga))
         
         setBinding()
     }
@@ -58,19 +65,31 @@ internal final class MainViewModel {
     private func setBinding() {
         currentTop
             .sink { top in
-                self.dataSubject.value = self.items
-                guard self.dataSubject.value.isEmpty else {
+                let items = self.items
+                self.dataSubject.send(items)
+                guard items.isEmpty else {
                     return
                 }
                 self.download(top: top, page: 1)
             }
             .store(in: &cancellables)
-        
         animeItems
             .sink(receiveValue: showItems(top: .anime))
             .store(in: &cancellables)
         mangaItems
             .sink(receiveValue: showItems(top: .manga))
+            .store(in: &cancellables)
+        
+        favorAnimes
+            .sink { favors in
+                UserDefaults.standard.anime = Array(favors)
+            }
+            .store(in: &cancellables)
+        
+        favorMangas
+            .sink { favors in
+                UserDefaults.standard.manga = Array(favors)
+            }
             .store(in: &cancellables)
     }
     
@@ -90,14 +109,16 @@ internal final class MainViewModel {
                             } else {
                                 result = .failure(.invalid(msg: $0.url))
                             }
-                            let start = self.serviceProvider.dateFormatter.string(dateFormat: self.dateFormat, date: $0.aired.from)
+                            let start = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: $0.aired.from)
                             let end: String?
                             if let eDate = $0.aired.to {
-                                end = self.serviceProvider.dateFormatter.string(dateFormat: self.dateFormat, date: eDate)
+                                end = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: eDate)
                             } else {
                                 end = nil
                             }
-                            return .init(id: $0.mal_id, title: $0.title, rank: $0.rank, start: start, end: end, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
+                            let id = String($0.mal_id)
+                            let isFavor = self.favorAnimes.value.contains(id)
+                            return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
                         }
                 }
                 .store(in: &cancellables)
@@ -116,14 +137,16 @@ internal final class MainViewModel {
                             } else {
                                 result = .failure(.invalid(msg: $0.url))
                             }
-                            let start = self.serviceProvider.dateFormatter.string(dateFormat: self.dateFormat, date: $0.published.from)
+                            let start = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: $0.published.from)
                             let end: String?
                             if let eDate = $0.published.to {
-                                end = self.serviceProvider.dateFormatter.string(dateFormat: self.dateFormat, date: eDate)
+                                end = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: eDate)
                             } else {
                                 end = nil
                             }
-                            return .init(id: $0.mal_id, title: $0.title, rank: $0.rank, start: start, end: end, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
+                            let id = String($0.mal_id)
+                            let isFavor = self.favorMangas.value.contains(id)
+                            return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
                         }
                 }
                 .store(in: &cancellables)
@@ -146,13 +169,16 @@ internal final class MainViewModel {
     private func showItems(top: Top) -> ([TopItemViewModel]) -> () {
         return { items in
             if self.currentTop.value == top {
-                self.dataSubject.value = items
+                self.dataSubject.send(items)
             }
         }
     }
     
     // MARK: - Input
     func change(top: Top) {
+        guard top != self.currentTop.value else {
+            return
+        }
         self.currentTop.value = top
     }
     
@@ -162,5 +188,51 @@ internal final class MainViewModel {
     
     func alert(msg: String) {
         message.send(msg)
+    }
+    
+    func favor(id: String, isFavor: Bool) {
+        let favorSubject: CurrentValueSubject<Set<String>, Never>
+        let itemSubject: CurrentValueSubject<[TopItemViewModel], Never>
+        switch currentTop.value {
+        case .anime:
+            favorSubject = favorAnimes
+            itemSubject = animeItems
+        case .manga:
+            favorSubject = favorMangas
+            itemSubject = mangaItems
+        }
+        if isFavor && !favorSubject.value.contains(id) {
+            favorSubject.value.insert(id)
+        } else if !isFavor && favorSubject.value.contains(id) {
+            favorSubject.value.remove(id)
+        }
+        guard let index = itemSubject.value.firstIndex(where: { $0.id == id }) else {
+            return
+        }
+        itemSubject.value[index].isFavor = isFavor
+    }
+    
+    func item(indexPath: IndexPath) -> TopItemViewModel {
+        self.items[indexPath.item]
+    }
+}
+
+extension UserDefaults {
+    var anime: [String] {
+        get {
+            value(forKey: "anime") as? [String] ?? []
+        }
+        set {
+            set(newValue, forKey: "anime")
+        }
+    }
+    
+    var manga: [String] {
+        get {
+            value(forKey: "manga") as? [String] ?? []
+        }
+        set {
+            set(newValue, forKey: "manga")
+        }
     }
 }
