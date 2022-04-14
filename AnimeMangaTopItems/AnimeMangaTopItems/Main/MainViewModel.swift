@@ -6,11 +6,11 @@ internal final class MainViewModel {
     private var cancellables: Set<AnyCancellable>
 
     private let currentTop: CurrentValueSubject<Top, Never>
-    
+
     private let animeItems: CurrentValueSubject<[TopItemViewModel], Never>
-    
+
     private let mangaItems: CurrentValueSubject<[TopItemViewModel], Never>
-    
+
     private var items: [TopItemViewModel] {
         switch currentTop.value {
         case .anime:
@@ -19,27 +19,27 @@ internal final class MainViewModel {
             return mangaItems.value
         }
     }
-    
+
     let dataSubject: PassthroughSubject<[TopItemViewModel], Never>
-    
+
     let message: PassthroughSubject<String, Never>
-    
+
     let linkURL: PassthroughSubject<URL, Never>
-    
+
     private var animeCurrentPage: Int
     private var animeLastPage: Int
-    
+
     private var mangaCurrentPage: Int
     private var mangaLastPage: Int
-    
+
     private let serviceProvider: ServicesProvider
-    
+
     private let datePattern: String
-    
+
     private var favorAnimes: CurrentValueSubject<Set<String>, Never>
-    
+
     private var favorMangas: CurrentValueSubject<Set<String>, Never>
-    
+
     init(top: Top, serviceProvider: ServicesProvider) {
         cancellables = []
         animeItems = .init([])
@@ -49,19 +49,19 @@ internal final class MainViewModel {
         message = .init()
         linkURL = .init()
         self.serviceProvider = serviceProvider
-        
+
         animeCurrentPage = .zero
         animeLastPage = .max
         mangaCurrentPage = .zero
         mangaLastPage = .max
         datePattern = "d LLL, yyyy"
-        
+
         favorAnimes = .init(Set(UserDefaults.standard.anime))
         favorMangas = .init(Set(UserDefaults.standard.manga))
-        
+
         setBinding()
     }
-    
+
     private func setBinding() {
         currentTop
             .sink { top in
@@ -79,20 +79,20 @@ internal final class MainViewModel {
         mangaItems
             .sink(receiveValue: showItems(top: .manga))
             .store(in: &cancellables)
-        
+
         favorAnimes
             .sink { favors in
                 UserDefaults.standard.anime = Array(favors)
             }
             .store(in: &cancellables)
-        
+
         favorMangas
             .sink { favors in
                 UserDefaults.standard.manga = Array(favors)
             }
             .store(in: &cancellables)
     }
-    
+
     private func download(top: Top, page: Int) {
         switch top {
         case .anime:
@@ -152,7 +152,7 @@ internal final class MainViewModel {
                 .store(in: &cancellables)
         }
     }
-    
+
     private func doCompletion(completion: Subscribers.Completion<Error>) {
         switch completion {
         case .finished:
@@ -165,15 +165,15 @@ internal final class MainViewModel {
             self.message.send(network.message)
         }
     }
-    
-    private func showItems(top: Top) -> ([TopItemViewModel]) -> () {
+
+    private func showItems(top: Top) -> ([TopItemViewModel]) -> Void {
         return { items in
             if self.currentTop.value == top {
                 self.dataSubject.send(items)
             }
         }
     }
-    
+
     // MARK: - Input
     func change(top: Top) {
         guard top != self.currentTop.value else {
@@ -181,15 +181,15 @@ internal final class MainViewModel {
         }
         self.currentTop.value = top
     }
-    
+
     func linkTo(url: URL) {
         linkURL.send(url)
     }
-    
+
     func alert(msg: String) {
         message.send(msg)
     }
-    
+
     func favor(id: String, isFavor: Bool) {
         let favorSubject: CurrentValueSubject<Set<String>, Never>
         let itemSubject: CurrentValueSubject<[TopItemViewModel], Never>
@@ -211,7 +211,7 @@ internal final class MainViewModel {
         }
         itemSubject.value[index].isFavor = isFavor
     }
-    
+
     func item(indexPath: IndexPath) -> TopItemViewModel {
         self.items[indexPath.item]
     }
@@ -226,7 +226,7 @@ extension UserDefaults {
             set(newValue, forKey: "anime")
         }
     }
-    
+
     var manga: [String] {
         get {
             value(forKey: "manga") as? [String] ?? []

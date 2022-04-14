@@ -10,7 +10,7 @@ internal final class MainView: UIView {
     private var allViews: [UIView] {
         [segControl, collectionView]
     }
-    
+
     let selected: CurrentValueSubject<Int, Never>
 
     init(items: [Top], layout: UICollectionViewLayout = UICollectionViewFlowLayout()) {
@@ -23,11 +23,11 @@ internal final class MainView: UIView {
         setupViews()
         setupEvent()
     }
-    
+
     private func setupEvent() {
         segControl.addTarget(self, action: #selector(toggle(sender:)), for: .valueChanged)
     }
-    
+
     @objc
     private func toggle(sender: UISegmentedControl) {
         selected.value = sender.selectedSegmentIndex

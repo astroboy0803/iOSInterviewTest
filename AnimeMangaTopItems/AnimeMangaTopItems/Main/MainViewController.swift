@@ -3,19 +3,19 @@ import Combine
 import SafariServices
 
 class MainViewController: UIViewController {
-    
+
     private let mainView: MainView
 
     private let viewModel: MainViewModel
 
     private var cancellables: Set<AnyCancellable>
-    
+
     private var cellCancellables: [String: AnyCancellable]
 
     private let imgLoader: ImageLoader
-    
+
     private let servicesProvider: ServicesProvider
-    
+
     private lazy var dataSource = makeDataSource()
 
     init(servicesProvider: ServicesProvider) {
@@ -42,12 +42,12 @@ class MainViewController: UIViewController {
                 self.viewModel.change(top: top)
             }
             .store(in: &cancellables)
-        
+
         viewModel.dataSubject
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: self.applySnapshot(_:))
             .store(in: &cancellables)
-        
+
         viewModel.message
             .receive(on: DispatchQueue.main)
             .sink { message in
@@ -57,7 +57,7 @@ class MainViewController: UIViewController {
                 self.present(alert, animated: true)
             }
             .store(in: &cancellables)
-        
+
         viewModel.linkURL
             .receive(on: DispatchQueue.main)
             .sink { url in
@@ -75,11 +75,11 @@ class MainViewController: UIViewController {
     override func loadView() {
         view = mainView
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
@@ -105,10 +105,10 @@ extension MainViewController {
             }
             return cell
         }
-        
+
         return dataSource
     }
-    
+
     private func applySnapshot(_ model: [TopItemViewModel]) {
         var snapshot = NSDiffableDataSourceSnapshot<Int, TopItemViewModel>()
         // 只有一個section, 就直接放整數
@@ -120,7 +120,7 @@ extension MainViewController {
 }
 
 extension MainViewController: UICollectionViewDelegate {
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = viewModel.item(indexPath: indexPath)
         switch item.url {
@@ -142,12 +142,12 @@ extension MainViewController {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
-        
+
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.5))
-        
+
         // 水平
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
+
         // contentInsets就像css的padding -> 內縮 留白
         // contentOffsets就像css的margin -> 設定邊界
         group.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8)

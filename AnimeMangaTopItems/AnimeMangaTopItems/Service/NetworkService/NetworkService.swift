@@ -8,7 +8,7 @@ internal final class NetworkService: NetworkServiceType {
         case request
         case response
         case status(code: Int, data: Data)
-        
+
         var message: String {
             switch self {
             case .url:
