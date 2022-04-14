@@ -40,6 +40,8 @@ internal final class MainViewModel {
 
     private var favorMangas: CurrentValueSubject<Set<String>, Never>
 
+    private var isLoading: Bool
+
     init(top: Top, serviceProvider: ServicesProvider) {
         cancellables = []
         animeItems = .init([])
@@ -48,6 +50,7 @@ internal final class MainViewModel {
         currentTop = .init(top)
         message = .init()
         linkURL = .init()
+        isLoading = false
         self.serviceProvider = serviceProvider
 
         animeCurrentPage = .zero
@@ -94,14 +97,17 @@ internal final class MainViewModel {
     }
 
     private func download(top: Top, page: Int) {
+        guard !isLoading else {
+            return
+        }
+        isLoading = true
         switch top {
         case .anime:
-            animeCurrentPage = page
             serviceProvider.network.fetchAnime(page: page)
                 .sink(receiveCompletion: doCompletion) { dataModel in
                     self.animeCurrentPage = dataModel.pagination.current_page
                     self.animeLastPage = dataModel.pagination.last_visible_page
-                    self.animeItems.value = dataModel.data
+                    self.animeItems.value.append(contentsOf: dataModel.data
                         .map {
                             let result: Result<URL, TopItemViewModel.URLEmpty>
                             if let urlString = $0.url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString) {
@@ -119,17 +125,17 @@ internal final class MainViewModel {
                             let id = String($0.mal_id)
                             let isFavor = self.favorAnimes.value.contains(id)
                             return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
-                        }
+                        })
+                    self.isLoading = false
                 }
                 .store(in: &cancellables)
 
         case .manga:
-            mangaCurrentPage = page
             serviceProvider.network.fetchManga(page: page)
                 .sink(receiveCompletion: doCompletion) { dataModel in
                     self.mangaCurrentPage = dataModel.pagination.current_page
                     self.mangaLastPage = dataModel.pagination.last_visible_page
-                    self.mangaItems.value = dataModel.data
+                    self.mangaItems.value.append(contentsOf: dataModel.data
                         .map {
                             let result: Result<URL, TopItemViewModel.URLEmpty>
                             if let urlString = $0.url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString) {
@@ -147,7 +153,8 @@ internal final class MainViewModel {
                             let id = String($0.mal_id)
                             let isFavor = self.favorMangas.value.contains(id)
                             return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
-                        }
+                        })
+                    self.isLoading = false
                 }
                 .store(in: &cancellables)
         }
@@ -214,6 +221,21 @@ internal final class MainViewModel {
 
     func item(indexPath: IndexPath) -> TopItemViewModel {
         self.items[indexPath.item]
+    }
+
+    func fetch() {
+        switch currentTop.value {
+        case .anime:
+            guard animeCurrentPage < animeLastPage else {
+                return
+            }
+            self.download(top: .anime, page: animeCurrentPage + 1)
+        case .manga:
+            guard mangaCurrentPage < mangaLastPage else {
+                return
+            }
+            self.download(top: .anime, page: mangaCurrentPage + 1)
+        }
     }
 }
 

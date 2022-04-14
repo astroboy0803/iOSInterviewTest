@@ -91,7 +91,6 @@ extension MainViewController {
         let dataSource = UICollectionViewDiffableDataSource<Int, TopItemViewModel>(collectionView: mainView.collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopItemCell.reuseIdentifier, for: indexPath)
             if let topItemCell = cell as? TopItemCell {
-                let item = self.viewModel.item(indexPath: indexPath)
                 topItemCell.setup(to: item)
                 self.cellCancellables[topItemCell.cellID]?.cancel()
                 self.cellCancellables.removeValue(forKey: topItemCell.cellID)
@@ -120,7 +119,6 @@ extension MainViewController {
 }
 
 extension MainViewController: UICollectionViewDelegate {
-
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = viewModel.item(indexPath: indexPath)
         switch item.url {
@@ -132,6 +130,13 @@ extension MainViewController: UICollectionViewDelegate {
                 viewModel.alert(msg: msg)
             }
         }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
+            self.viewModel.fetch()
+        }
+
     }
 }
 
