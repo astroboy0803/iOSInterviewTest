@@ -7,8 +7,12 @@ internal final class MainView: UIView {
 
     let collectionView: UICollectionView
 
+    let activityView: UIActivityIndicatorView
+
+    let containView: UIView
+
     private var allViews: [UIView] {
-        [segControl, collectionView]
+        [segControl, collectionView, containView, activityView]
     }
 
     let selected: CurrentValueSubject<Int, Never>
@@ -17,11 +21,23 @@ internal final class MainView: UIView {
         selected = .init(.zero)
         segControl = .init(items: items.map { $0.title })
         collectionView = .init(frame: .zero, collectionViewLayout: layout)
+        activityView = .init()
+        containView = .init()
         super.init(frame: .zero)
 
         segControl.selectedSegmentIndex = selected.value
         setupViews()
         setupEvent()
+    }
+
+    func stopAnimate() {
+        containView.isHidden = true
+        activityView.stopAnimating()
+    }
+
+    func startAnimate() {
+        containView.isHidden = false
+        activityView.startAnimating()
     }
 
     private func setupEvent() {
@@ -41,6 +57,11 @@ internal final class MainView: UIView {
         backgroundColor = .white
         collectionView.backgroundColor = .white
 
+        activityView.style = .large
+        activityView.color = .white
+        activityView.backgroundColor = .black.withAlphaComponent(0.7)
+        activityView.layer.cornerRadius = 5
+
         segControl.setTitleTextAttributes([
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .headline)
         ], for: .selected)
@@ -53,9 +74,10 @@ internal final class MainView: UIView {
     }
 
     private func addSubviews() {
-        allViews.forEach {
+        [segControl, collectionView, containView].forEach {
             addSubview($0)
         }
+        containView.addSubview(activityView)
     }
 
     private func setupConstraints() {
@@ -69,7 +91,17 @@ internal final class MainView: UIView {
             collectionView.topAnchor.constraint(equalTo: segControl.bottomAnchor, constant: 10),
             collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -10)
+            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -10),
+
+            containView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            containView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            containView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            containView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+
+            activityView.centerXAnchor.constraint(equalTo: containView.centerXAnchor),
+            activityView.centerYAnchor.constraint(equalTo: containView.centerYAnchor),
+            activityView.heightAnchor.constraint(equalToConstant: 80),
+            activityView.widthAnchor.constraint(equalTo: activityView.heightAnchor)
         ])
     }
 }

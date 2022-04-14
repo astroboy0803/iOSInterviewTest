@@ -7,7 +7,9 @@ internal final class TopItemCell: UICollectionViewCell {
         var isFavor: Bool
     }
 
-    static let reuseIdentifier = "TopItemCell"
+    static var reuseIdentifier: String {
+        String(describing: TopItemCell.self)
+    }
 
     private let imgView: UIImageView
     private let titleLabel: UILabel

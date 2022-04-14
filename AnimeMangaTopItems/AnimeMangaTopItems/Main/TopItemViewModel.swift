@@ -5,7 +5,6 @@ internal struct TopItemViewModel: TopItemCellable {
     enum URLEmpty: Error {
         case invalid(msg: String)
     }
-
     let id: String
     let title: String
     let rank: Int

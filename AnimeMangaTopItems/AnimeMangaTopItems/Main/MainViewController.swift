@@ -43,6 +43,17 @@ class MainViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { value in
+                if value {
+                    self.mainView.startAnimate()
+                } else {
+                    self.mainView.stopAnimate()
+                }
+            }
+            .store(in: &cancellables)
+
         viewModel.dataSubject
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: self.applySnapshot(_:))
@@ -136,7 +147,6 @@ extension MainViewController: UICollectionViewDelegate {
         if scrollView.contentOffset.y + scrollView.frame.height >= scrollView.contentSize.height {
             self.viewModel.fetch()
         }
-
     }
 }
 
@@ -157,9 +167,7 @@ extension MainViewController {
         // contentOffsets就像css的margin -> 設定邊界
         group.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8)
 
-        // section間格
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2)
 
         return UICollectionViewCompositionalLayout(section: section)
     }

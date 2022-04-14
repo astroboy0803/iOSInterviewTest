@@ -26,6 +26,8 @@ internal final class MainViewModel {
 
     let linkURL: PassthroughSubject<URL, Never>
 
+    let isLoading: CurrentValueSubject<Bool, Never>
+
     private var animeCurrentPage: Int
     private var animeLastPage: Int
 
@@ -40,8 +42,6 @@ internal final class MainViewModel {
 
     private var favorMangas: CurrentValueSubject<Set<String>, Never>
 
-    private var isLoading: Bool
-
     init(top: Top, serviceProvider: ServicesProvider) {
         cancellables = []
         animeItems = .init([])
@@ -50,7 +50,7 @@ internal final class MainViewModel {
         currentTop = .init(top)
         message = .init()
         linkURL = .init()
-        isLoading = false
+        isLoading = .init(false)
         self.serviceProvider = serviceProvider
 
         animeCurrentPage = .zero
@@ -97,10 +97,10 @@ internal final class MainViewModel {
     }
 
     private func download(top: Top, page: Int) {
-        guard !isLoading else {
+        guard !isLoading.value else {
             return
         }
-        isLoading = true
+        isLoading.value = true
         switch top {
         case .anime:
             serviceProvider.network.fetchAnime(page: page)
@@ -126,7 +126,7 @@ internal final class MainViewModel {
                             let isFavor = self.favorAnimes.value.contains(id)
                             return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
                         })
-                    self.isLoading = false
+                    self.isLoading.value = false
                 }
                 .store(in: &cancellables)
 
@@ -154,7 +154,7 @@ internal final class MainViewModel {
                             let isFavor = self.favorMangas.value.contains(id)
                             return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
                         })
-                    self.isLoading = false
+                    self.isLoading.value = false
                 }
                 .store(in: &cancellables)
         }
@@ -234,7 +234,7 @@ internal final class MainViewModel {
             guard mangaCurrentPage < mangaLastPage else {
                 return
             }
-            self.download(top: .anime, page: mangaCurrentPage + 1)
+            self.download(top: .manga, page: mangaCurrentPage + 1)
         }
     }
 }
