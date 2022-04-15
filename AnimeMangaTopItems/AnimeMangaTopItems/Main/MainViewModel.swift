@@ -182,6 +182,8 @@ internal final class MainViewModel {
     }
 
     // MARK: - Input
+    
+    // MARK: 切換顯示內容
     func change(top: Top) {
         guard top != self.currentTop.value else {
             return
@@ -189,14 +191,17 @@ internal final class MainViewModel {
         self.currentTop.value = top
     }
 
+    // MARK: 開啟網頁
     func linkTo(url: URL) {
         linkURL.send(url)
     }
 
+    // MARK: 提示訊息
     func alert(msg: String) {
         message.send(msg)
     }
 
+    // MARK: 加入或移除我的最愛
     func favor(id: String, isFavor: Bool) {
         let favorSubject: CurrentValueSubject<Set<String>, Never>
         let itemSubject: CurrentValueSubject<[TopItemViewModel], Never>
@@ -219,10 +224,12 @@ internal final class MainViewModel {
         itemSubject.value[index].isFavor = isFavor
     }
 
+    // MARK: 取得selected cell的資料
     func item(indexPath: IndexPath) -> TopItemViewModel {
         self.items[indexPath.item]
     }
 
+    // MARK: 擷取更多資料
     func fetch() {
         switch currentTop.value {
         case .anime:

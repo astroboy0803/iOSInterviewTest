@@ -2,6 +2,12 @@ import Foundation
 import Combine
 
 internal final class NetworkService: NetworkServiceType {
+    
+    private let session: URLSession
+    
+    init(session: URLSession = URLSession(configuration: .ephemeral)) {
+        self.session = session
+    }
 
     enum NetworkError: Error {
         case url
@@ -46,7 +52,7 @@ internal final class NetworkService: NetworkServiceType {
         request.httpMethod = "GET"
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        return URLSession.shared.dataTaskPublisher(for: request)
+        return session.dataTaskPublisher(for: request)
             .mapError { _ in NetworkError.request }
             .flatMap { data, resp -> AnyPublisher<Data, Error> in
                 guard let response = resp as? HTTPURLResponse else {

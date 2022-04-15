@@ -1,0 +1,287 @@
+{
+    "pagination": {
+        "last_visible_page": 3,
+        "has_next_page": true,
+        "current_page": 1,
+        "items": {
+            "count": 2,
+            "total": 6,
+            "per_page": 2
+        }
+    },
+    "data": [
+        {
+            "mal_id": 2,
+            "url": "https:\/\/myanimelist.net\/manga\/2\/Berserk",
+            "images": {
+                "jpg": {
+                    "image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/1\/157897.jpg",
+                    "small_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/1\/157897t.jpg",
+                    "large_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/1\/157897l.jpg"
+                },
+                "webp": {
+                    "image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/1\/157897.webp",
+                    "small_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/1\/157897t.webp",
+                    "large_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/1\/157897l.webp"
+                }
+            },
+            "title": "Berserk",
+            "title_english": "Berserk",
+            "title_japanese": "\u30d9\u30eb\u30bb\u30eb\u30af",
+            "title_synonyms": [
+                "Berserk: The Prototype"
+            ],
+            "type": "Manga",
+            "chapters": 380,
+            "volumes": 41,
+            "status": "On Hiatus",
+            "publishing": false,
+            "published": {
+                "from": "1989-08-25T00:00:00+00:00",
+                "to": "2021-09-10T00:00:00+00:00",
+                "prop": {
+                    "from": {
+                        "day": 25,
+                        "month": 8,
+                        "year": 1989
+                    },
+                    "to": {
+                        "day": 10,
+                        "month": 9,
+                        "year": 2021
+                    }
+                },
+                "string": "Aug 25, 1989 to Sep 10, 2021"
+            },
+            "score": 9.44,
+            "scored": 9.44,
+            "scored_by": 247383,
+            "rank": 1,
+            "popularity": 2,
+            "members": 512653,
+            "favorites": 96553,
+            "synopsis": "Guts, a former mercenary now known as the \"Black Swordsman,\" is out for revenge. After a tumultuous childhood, he finally finds someone he respects and believes he can trust, only to have everything fall apart when this person takes away everything important to Guts for the purpose of fulfilling his own desires. Now marked for death, Guts becomes condemned to a fate in which he is relentlessly pursued by demonic beings. Setting out on a dreadful quest riddled with misfortune, Guts, armed with a massive sword and monstrous strength, will let nothing stop him, not even death itself, until he is finally able to take the head of the one who stripped him\u2014and his loved one\u2014of their humanity. [Written by MAL Rewrite] Included one-shot: Volume 14: Berserk: The Prototype",
+            "background": "Berserk won the Award for Excellence at the sixth installment of Tezuka Osamu Cultural Prize in 2002. The series has over 50 million copies in print worldwide and has been published in English by Dark Horse since November 4, 2003. It is also published in Italy, Germany, Spain, France, Brazil, South Korea, Hong Kong, Taiwan, Thailand, Poland, M\u00e9xico and Turkey.",
+            "authors": [
+                {
+                    "mal_id": 1868,
+                    "type": "people",
+                    "name": "Miura, Kentarou",
+                    "url": "https:\/\/myanimelist.net\/people\/1868\/Kentarou_Miura"
+                }
+            ],
+            "serializations": [
+                {
+                    "mal_id": 2,
+                    "type": "manga",
+                    "name": "Young Animal",
+                    "url": "https:\/\/myanimelist.net\/manga\/magazine\/2\/Young_Animal"
+                }
+            ],
+            "genres": [
+                {
+                    "mal_id": 1,
+                    "type": "manga",
+                    "name": "Action",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/1\/Action"
+                },
+                {
+                    "mal_id": 2,
+                    "type": "manga",
+                    "name": "Adventure",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/2\/Adventure"
+                },
+                {
+                    "mal_id": 46,
+                    "type": "manga",
+                    "name": "Award Winning",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/46\/Award_Winning"
+                },
+                {
+                    "mal_id": 8,
+                    "type": "manga",
+                    "name": "Drama",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/8\/Drama"
+                },
+                {
+                    "mal_id": 10,
+                    "type": "manga",
+                    "name": "Fantasy",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/10\/Fantasy"
+                },
+                {
+                    "mal_id": 14,
+                    "type": "manga",
+                    "name": "Horror",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/14\/Horror"
+                },
+                {
+                    "mal_id": 37,
+                    "type": "manga",
+                    "name": "Supernatural",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/37\/Supernatural"
+                }
+            ],
+            "explicit_genres": [],
+            "themes": [
+                {
+                    "mal_id": 58,
+                    "type": "manga",
+                    "name": "Gore",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/58\/Gore"
+                },
+                {
+                    "mal_id": 38,
+                    "type": "manga",
+                    "name": "Military",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/38\/Military"
+                },
+                {
+                    "mal_id": 6,
+                    "type": "manga",
+                    "name": "Mythology",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/6\/Mythology"
+                },
+                {
+                    "mal_id": 40,
+                    "type": "manga",
+                    "name": "Psychological",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/40\/Psychological"
+                }
+            ],
+            "demographics": [
+                {
+                    "mal_id": 41,
+                    "type": "manga",
+                    "name": "Seinen",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/41\/Seinen"
+                }
+            ]
+        },
+        {
+            "mal_id": 1706,
+            "url": "https:\/\/myanimelist.net\/manga\/1706\/JoJo_no_Kimyou_na_Bouken_Part_7__Steel_Ball_Run",
+            "images": {
+                "jpg": {
+                    "image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/3\/179882.jpg",
+                    "small_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/3\/179882t.jpg",
+                    "large_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/3\/179882l.jpg"
+                },
+                "webp": {
+                    "image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/3\/179882.webp",
+                    "small_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/3\/179882t.webp",
+                    "large_image_url": "https:\/\/cdn.myanimelist.net\/images\/manga\/3\/179882l.webp"
+                }
+            },
+            "title": "JoJo no Kimyou na Bouken Part 7: Steel Ball Run",
+            "title_english": null,
+            "title_japanese": "\u30b8\u30e7\u30b8\u30e7\u306e\u5947\u5999\u306a\u5192\u967a Part7 STEEL BALL RUN",
+            "title_synonyms": [
+                "JoJo's Bizarre Adventure Part 7: Steel Ball Run",
+                "SBR"
+            ],
+            "type": "Manga",
+            "chapters": 96,
+            "volumes": 24,
+            "status": "Finished",
+            "publishing": false,
+            "published": {
+                "from": "2004-01-19T00:00:00+00:00",
+                "to": "2011-04-19T00:00:00+00:00",
+                "prop": {
+                    "from": {
+                        "day": 19,
+                        "month": 1,
+                        "year": 2004
+                    },
+                    "to": {
+                        "day": 19,
+                        "month": 4,
+                        "year": 2011
+                    }
+                },
+                "string": "Jan 19, 2004 to Apr 19, 2011"
+            },
+            "score": 9.27,
+            "scored": 9.27,
+            "scored_by": 117661,
+            "rank": 2,
+            "popularity": 27,
+            "members": 197191,
+            "favorites": 33675,
+            "synopsis": "In the American Old West, the world's greatest race is about to begin. Thousands line up in San Diego to travel over six thousand kilometers for a chance to win the grand prize of fifty million dollars. With the era of the horse reaching its end, contestants are allowed to use any kind of vehicle they wish. Competitors will have to endure grueling conditions, traveling up to a hundred kilometers a day through uncharted wastelands. The Steel Ball Run is truly a one-of-a-kind event. The youthful Johnny Joestar, a crippled former horse racer, has come to San Diego to watch the start of the race. There he encounters Gyro Zeppeli, a racer with two steel balls at his waist instead of a gun. Johnny witnesses Gyro using one of his steel balls to unleash a fantastical power, compelling a man to fire his gun at himself during a duel. In the midst of the action, Johnny happens to touch the steel ball and feels a power surging through his legs, allowing him to stand up for the first time in two years. Vowing to find the secret of the steel balls, Johnny decides to compete in the race, and so begins his bizarre adventure across America on the Steel Ball Run. [Written by MAL Rewrite]",
+            "background": "JoJo no Kimyou na Bouken Part 7: Steel Ball Run was originally presented as an unrelated story to the JoJo series and was serialized in Weekly Shounen Jump magazine as Steel Ball Run from issues #8~47 2004. Serialization then transferred to Ultra Jump magazine from issue May 2005 and the series was officially declared as Part 7 of the JoJo no Kimyou na Bouken series.",
+            "authors": [
+                {
+                    "mal_id": 2619,
+                    "type": "people",
+                    "name": "Araki, Hirohiko",
+                    "url": "https:\/\/myanimelist.net\/people\/2619\/Hirohiko_Araki"
+                }
+            ],
+            "serializations": [
+                {
+                    "mal_id": 25,
+                    "type": "manga",
+                    "name": "Ultra Jump",
+                    "url": "https:\/\/myanimelist.net\/manga\/magazine\/25\/Ultra_Jump"
+                }
+            ],
+            "genres": [
+                {
+                    "mal_id": 1,
+                    "type": "manga",
+                    "name": "Action",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/1\/Action"
+                },
+                {
+                    "mal_id": 2,
+                    "type": "manga",
+                    "name": "Adventure",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/2\/Adventure"
+                },
+                {
+                    "mal_id": 14,
+                    "type": "manga",
+                    "name": "Horror",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/14\/Horror"
+                },
+                {
+                    "mal_id": 7,
+                    "type": "manga",
+                    "name": "Mystery",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/7\/Mystery"
+                },
+                {
+                    "mal_id": 37,
+                    "type": "manga",
+                    "name": "Supernatural",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/37\/Supernatural"
+                }
+            ],
+            "explicit_genres": [],
+            "themes": [
+                {
+                    "mal_id": 13,
+                    "type": "manga",
+                    "name": "Historical",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/13\/Historical"
+                }
+            ],
+            "demographics": [
+                {
+                    "mal_id": 41,
+                    "type": "manga",
+                    "name": "Seinen",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/41\/Seinen"
+                },
+                {
+                    "mal_id": 27,
+                    "type": "manga",
+                    "name": "Shounen",
+                    "url": "https:\/\/myanimelist.net\/manga\/genre\/27\/Shounen"
+                }
+            ]
+        }
+    ]
+}

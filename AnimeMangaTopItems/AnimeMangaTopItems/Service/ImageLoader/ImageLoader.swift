@@ -4,8 +4,11 @@ import Combine
 internal final class ImageLoader: ImageLoaderType {
 
     private let cache: ImageCacheType
+    
+    private let session: URLSession
 
-    init(cache: ImageCacheType = ImageCache()) {
+    init(session: URLSession = URLSession.shared, cache: ImageCacheType = ImageCache()) {
+        self.session = session
         self.cache = cache
     }
 
@@ -14,7 +17,7 @@ internal final class ImageLoader: ImageLoaderType {
             return Just(image)
                 .eraseToAnyPublisher()
         }
-        return URLSession.shared.dataTaskPublisher(for: url)
+        return session.dataTaskPublisher(for: url)
             .map { data, _ -> UIImage? in
                 let image = UIImage(data: data)
                 return image

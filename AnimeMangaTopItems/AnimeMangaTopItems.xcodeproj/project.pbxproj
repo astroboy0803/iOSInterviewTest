@@ -12,9 +12,22 @@
 		780583AB28055FB100688F48 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780583AA28055FB100688F48 /* MainViewController.swift */; };
 		780583B028055FB100688F48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 780583AF28055FB100688F48 /* Assets.xcassets */; };
 		780583B328055FB100688F48 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 780583B128055FB100688F48 /* LaunchScreen.storyboard */; };
-		780583BE28055FB100688F48 /* AnimeMangaTopItemsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780583BD28055FB100688F48 /* AnimeMangaTopItemsTests.swift */; };
-		780583C828055FB200688F48 /* AnimeMangaTopItemsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780583C728055FB200688F48 /* AnimeMangaTopItemsUITests.swift */; };
-		780583CA28055FB200688F48 /* AnimeMangaTopItemsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780583C928055FB200688F48 /* AnimeMangaTopItemsUITestsLaunchTests.swift */; };
+		780D850A2808EED700379840 /* NetworkServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780D85092808EED700379840 /* NetworkServiceTest.swift */; };
+		780D850D2808F00900379840 /* URLProtocolMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780D850C2808F00900379840 /* URLProtocolMock.swift */; };
+		780D850F2808F7FC00379840 /* Anime.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D850E2808F7FC00379840 /* Anime.json */; };
+		780D85122808F84E00379840 /* Manga.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D85112808F84E00379840 /* Manga.json */; };
+		780D85142809006500379840 /* Gintama.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 780D85132809006500379840 /* Gintama.jpeg */; };
+		780D85172809020500379840 /* DateServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780D85162809020500379840 /* DateServiceTest.swift */; };
+		780D851A2809047D00379840 /* MainTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780D85192809047D00379840 /* MainTest.swift */; };
+		780D851C280908CD00379840 /* LoaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780D851B280908CD00379840 /* LoaderTest.swift */; };
+		780D851E28090D7F00379840 /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780D851D28090D7F00379840 /* NetworkServiceMock.swift */; };
+		780D852028090DB000379840 /* ImageLoaderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780D851F28090DB000379840 /* ImageLoaderMock.swift */; };
+		780D852228090F3300379840 /* Anime-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D852128090F3300379840 /* Anime-1.json */; };
+		780D852428090F4E00379840 /* Anime-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D852328090F4E00379840 /* Anime-2.json */; };
+		780D852628090F6C00379840 /* Anime-3.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D852528090F6C00379840 /* Anime-3.json */; };
+		780D85282809104200379840 /* Manga-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D85272809104200379840 /* Manga-1.json */; };
+		780D852A2809106A00379840 /* Manga-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D85292809106A00379840 /* Manga-2.json */; };
+		780D852C2809107B00379840 /* Manga-3.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D852B2809107B00379840 /* Manga-3.json */; };
 		7851EE4F2805624900320951 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EE4E2805624900320951 /* MainView.swift */; };
 		7851EE52280581A600320951 /* ServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EE51280581A600320951 /* ServicesProvider.swift */; };
 		7851EE55280581F100320951 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EE54280581F100320951 /* NetworkService.swift */; };
@@ -43,13 +56,6 @@
 			remoteGlobalIDString = 780583A228055FB100688F48;
 			remoteInfo = AnimeMangaTopItems;
 		};
-		780583C428055FB200688F48 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7805839B28055FB100688F48 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 780583A228055FB100688F48;
-			remoteInfo = AnimeMangaTopItems;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -61,10 +67,22 @@
 		780583B228055FB100688F48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		780583B428055FB100688F48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		780583B928055FB100688F48 /* AnimeMangaTopItemsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnimeMangaTopItemsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		780583BD28055FB100688F48 /* AnimeMangaTopItemsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeMangaTopItemsTests.swift; sourceTree = "<group>"; };
-		780583C328055FB200688F48 /* AnimeMangaTopItemsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnimeMangaTopItemsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		780583C728055FB200688F48 /* AnimeMangaTopItemsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeMangaTopItemsUITests.swift; sourceTree = "<group>"; };
-		780583C928055FB200688F48 /* AnimeMangaTopItemsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimeMangaTopItemsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		780D85092808EED700379840 /* NetworkServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceTest.swift; sourceTree = "<group>"; };
+		780D850C2808F00900379840 /* URLProtocolMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolMock.swift; sourceTree = "<group>"; };
+		780D850E2808F7FC00379840 /* Anime.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Anime.json; sourceTree = "<group>"; };
+		780D85112808F84E00379840 /* Manga.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Manga.json; sourceTree = "<group>"; };
+		780D85132809006500379840 /* Gintama.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Gintama.jpeg; sourceTree = "<group>"; };
+		780D85162809020500379840 /* DateServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateServiceTest.swift; sourceTree = "<group>"; };
+		780D85192809047D00379840 /* MainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTest.swift; sourceTree = "<group>"; };
+		780D851B280908CD00379840 /* LoaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderTest.swift; sourceTree = "<group>"; };
+		780D851D28090D7F00379840 /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
+		780D851F28090DB000379840 /* ImageLoaderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderMock.swift; sourceTree = "<group>"; };
+		780D852128090F3300379840 /* Anime-1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Anime-1.json"; sourceTree = "<group>"; };
+		780D852328090F4E00379840 /* Anime-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Anime-2.json"; sourceTree = "<group>"; };
+		780D852528090F6C00379840 /* Anime-3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Anime-3.json"; sourceTree = "<group>"; };
+		780D85272809104200379840 /* Manga-1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Manga-1.json"; sourceTree = "<group>"; };
+		780D85292809106A00379840 /* Manga-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Manga-2.json"; sourceTree = "<group>"; };
+		780D852B2809107B00379840 /* Manga-3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Manga-3.json"; sourceTree = "<group>"; };
 		7851EE4E2805624900320951 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		7851EE51280581A600320951 /* ServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesProvider.swift; sourceTree = "<group>"; };
 		7851EE54280581F100320951 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -100,13 +118,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		780583C028055FB200688F48 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -115,7 +126,6 @@
 			children = (
 				780583A528055FB100688F48 /* AnimeMangaTopItems */,
 				780583BC28055FB100688F48 /* AnimeMangaTopItemsTests */,
-				780583C628055FB200688F48 /* AnimeMangaTopItemsUITests */,
 				780583A428055FB100688F48 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -125,7 +135,6 @@
 			children = (
 				780583A328055FB100688F48 /* AnimeMangaTopItems.app */,
 				780583B928055FB100688F48 /* AnimeMangaTopItemsTests.xctest */,
-				780583C328055FB200688F48 /* AnimeMangaTopItemsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -149,18 +158,56 @@
 		780583BC28055FB100688F48 /* AnimeMangaTopItemsTests */ = {
 			isa = PBXGroup;
 			children = (
-				780583BD28055FB100688F48 /* AnimeMangaTopItemsTests.swift */,
+				780D85102808F80600379840 /* Resources */,
+				780D8515280901C600379840 /* Utilities */,
+				780D850B2808EFCE00379840 /* NetworkTest */,
+				780D85182809044400379840 /* Main */,
 			);
 			path = AnimeMangaTopItemsTests;
 			sourceTree = "<group>";
 		};
-		780583C628055FB200688F48 /* AnimeMangaTopItemsUITests */ = {
+		780D850B2808EFCE00379840 /* NetworkTest */ = {
 			isa = PBXGroup;
 			children = (
-				780583C728055FB200688F48 /* AnimeMangaTopItemsUITests.swift */,
-				780583C928055FB200688F48 /* AnimeMangaTopItemsUITestsLaunchTests.swift */,
+				780D850C2808F00900379840 /* URLProtocolMock.swift */,
+				780D85092808EED700379840 /* NetworkServiceTest.swift */,
+				780D851B280908CD00379840 /* LoaderTest.swift */,
 			);
-			path = AnimeMangaTopItemsUITests;
+			path = NetworkTest;
+			sourceTree = "<group>";
+		};
+		780D85102808F80600379840 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				780D850E2808F7FC00379840 /* Anime.json */,
+				780D85112808F84E00379840 /* Manga.json */,
+				780D85132809006500379840 /* Gintama.jpeg */,
+				780D852128090F3300379840 /* Anime-1.json */,
+				780D852328090F4E00379840 /* Anime-2.json */,
+				780D852528090F6C00379840 /* Anime-3.json */,
+				780D85272809104200379840 /* Manga-1.json */,
+				780D85292809106A00379840 /* Manga-2.json */,
+				780D852B2809107B00379840 /* Manga-3.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		780D8515280901C600379840 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				780D85162809020500379840 /* DateServiceTest.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		780D85182809044400379840 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				780D85192809047D00379840 /* MainTest.swift */,
+				780D851D28090D7F00379840 /* NetworkServiceMock.swift */,
+				780D851F28090DB000379840 /* ImageLoaderMock.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 		7851EE4D2805620C00320951 /* Main */ = {
@@ -272,24 +319,6 @@
 			productReference = 780583B928055FB100688F48 /* AnimeMangaTopItemsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		780583C228055FB200688F48 /* AnimeMangaTopItemsUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 780583D328055FB200688F48 /* Build configuration list for PBXNativeTarget "AnimeMangaTopItemsUITests" */;
-			buildPhases = (
-				780583BF28055FB200688F48 /* Sources */,
-				780583C028055FB200688F48 /* Frameworks */,
-				780583C128055FB200688F48 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				780583C528055FB200688F48 /* PBXTargetDependency */,
-			);
-			name = AnimeMangaTopItemsUITests;
-			productName = AnimeMangaTopItemsUITests;
-			productReference = 780583C328055FB200688F48 /* AnimeMangaTopItemsUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -304,10 +333,6 @@
 						CreatedOnToolsVersion = 13.3.1;
 					};
 					780583B828055FB100688F48 = {
-						CreatedOnToolsVersion = 13.3.1;
-						TestTargetID = 780583A228055FB100688F48;
-					};
-					780583C228055FB200688F48 = {
 						CreatedOnToolsVersion = 13.3.1;
 						TestTargetID = 780583A228055FB100688F48;
 					};
@@ -328,7 +353,6 @@
 			targets = (
 				780583A228055FB100688F48 /* AnimeMangaTopItems */,
 				780583B828055FB100688F48 /* AnimeMangaTopItemsTests */,
-				780583C228055FB200688F48 /* AnimeMangaTopItemsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -347,13 +371,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		780583C128055FB200688F48 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				780D852228090F3300379840 /* Anime-1.json in Resources */,
+				780D850F2808F7FC00379840 /* Anime.json in Resources */,
+				780D852A2809106A00379840 /* Manga-2.json in Resources */,
+				780D852628090F6C00379840 /* Anime-3.json in Resources */,
+				780D85142809006500379840 /* Gintama.jpeg in Resources */,
+				780D852C2809107B00379840 /* Manga-3.json in Resources */,
+				780D85122808F84E00379840 /* Manga.json in Resources */,
+				780D852428090F4E00379840 /* Anime-2.json in Resources */,
+				780D85282809104200379840 /* Manga-1.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,16 +418,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				780583BE28055FB100688F48 /* AnimeMangaTopItemsTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		780583BF28055FB200688F48 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				780583C828055FB200688F48 /* AnimeMangaTopItemsUITests.swift in Sources */,
-				780583CA28055FB200688F48 /* AnimeMangaTopItemsUITestsLaunchTests.swift in Sources */,
+				780D850A2808EED700379840 /* NetworkServiceTest.swift in Sources */,
+				780D851C280908CD00379840 /* LoaderTest.swift in Sources */,
+				780D851E28090D7F00379840 /* NetworkServiceMock.swift in Sources */,
+				780D850D2808F00900379840 /* URLProtocolMock.swift in Sources */,
+				780D851A2809047D00379840 /* MainTest.swift in Sources */,
+				780D85172809020500379840 /* DateServiceTest.swift in Sources */,
+				780D852028090DB000379840 /* ImageLoaderMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,11 +435,6 @@
 			isa = PBXTargetDependency;
 			target = 780583A228055FB100688F48 /* AnimeMangaTopItems */;
 			targetProxy = 780583BA28055FB100688F48 /* PBXContainerItemProxy */;
-		};
-		780583C528055FB200688F48 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 780583A228055FB100688F48 /* AnimeMangaTopItems */;
-			targetProxy = 780583C428055FB200688F48 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -644,42 +662,6 @@
 			};
 			name = Release;
 		};
-		780583D428055FB200688F48 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 97BD48DZC7;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tw.com.BruceHuang.AnimeMangaTopItemsUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AnimeMangaTopItems;
-			};
-			name = Debug;
-		};
-		780583D528055FB200688F48 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 97BD48DZC7;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tw.com.BruceHuang.AnimeMangaTopItemsUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AnimeMangaTopItems;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -706,15 +688,6 @@
 			buildConfigurations = (
 				780583D128055FB200688F48 /* Debug */,
 				780583D228055FB200688F48 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		780583D328055FB200688F48 /* Build configuration list for PBXNativeTarget "AnimeMangaTopItemsUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				780583D428055FB200688F48 /* Debug */,
-				780583D528055FB200688F48 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
