@@ -3,8 +3,14 @@ import Combine
 import SafariServices
 
 class MainViewController: UIViewController {
+    
+    @IBOutlet private var segControl: UISegmentedControl!
 
-    private let mainView: MainView
+    @IBOutlet private var collectionView: UICollectionView!
+
+    @IBOutlet private var activityView: UIActivityIndicatorView!
+
+    @IBOutlet private var containView: UIView!
 
     private let viewModel: MainViewModel
 
@@ -17,41 +23,53 @@ class MainViewController: UIViewController {
     private let servicesProvider: ServicesProvider
 
     private lazy var dataSource = makeDataSource()
-
+    
     init(servicesProvider: ServicesProvider) {
-        mainView = .init(items: Top.allCases, layout: Self.collectionViewLayout)
         self.servicesProvider = servicesProvider
-        viewModel = .init(top: Top.allCases[mainView.selected.value], serviceProvider: servicesProvider)
+        viewModel = .init(top: Top.allCases[0], serviceProvider: servicesProvider)
         cancellables = []
         imgLoader = .init()
         cellCancellables = [:]
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: "MainViewController", bundle: nil)
         setBinding()
-
-        mainView.collectionView.register(TopItemCell.self, forCellWithReuseIdentifier: TopItemCell.reuseIdentifier)
-        mainView.collectionView.dataSource = dataSource
-        mainView.collectionView.delegate = self
     }
-
+    
+    @IBAction private func change(sender: UISegmentedControl) {
+        guard let top = Top(rawValue: sender.selectedSegmentIndex) else {
+            return
+        }
+        self.viewModel.change(top: top)
+    }
+    
+    override func loadView() {
+        super.loadView()
+        setupUI()
+    }
+    
+    private func setupUI() {
+        
+        segControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .headline)
+        ], for: .selected)
+        segControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .subheadline)
+        ], for: .normal)
+        
+        setupCollection()
+    }
+    
+    private func setupCollection() {
+        collectionView.register(.init(nibName: "TopItemCell", bundle: nil), forCellWithReuseIdentifier: TopItemCell.reuseIdentifier)
+//        collectionView.register(TopItemCell.self, forCellWithReuseIdentifier: TopItemCell.reuseIdentifier)
+        collectionView.dataSource = dataSource
+        collectionView.delegate = self
+        collectionView.collectionViewLayout = Self.collectionViewLayout
+    }
+    
     private func setBinding() {
-        mainView.selected
-            .sink { value in
-                guard let top = Top(rawValue: value) else {
-                    return
-                }
-                self.viewModel.change(top: top)
-            }
-            .store(in: &cancellables)
-
         viewModel.isLoading
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                if value {
-                    self.mainView.startAnimate()
-                } else {
-                    self.mainView.stopAnimate()
-                }
-            }
+            .sink(receiveValue: showHideLoading(isLoading:))
             .store(in: &cancellables)
 
         viewModel.dataSubject
@@ -78,13 +96,19 @@ class MainViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
-
+    
+    private func showHideLoading(isLoading: Bool) {
+        if isLoading {
+            containView.isHidden = false
+            activityView.startAnimating()
+        } else {
+            containView.isHidden = true
+            activityView.stopAnimating()
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func loadView() {
-        view = mainView
     }
 
     override func viewDidLoad() {
@@ -99,7 +123,7 @@ class MainViewController: UIViewController {
 // MARK: - Diff Data Source
 extension MainViewController {
     private func makeDataSource() -> UICollectionViewDiffableDataSource<Int, TopItemViewModel> {
-        let dataSource = UICollectionViewDiffableDataSource<Int, TopItemViewModel>(collectionView: mainView.collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
+        let dataSource = UICollectionViewDiffableDataSource<Int, TopItemViewModel>(collectionView: self.collectionView) { collectionView, indexPath, item -> UICollectionViewCell? in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopItemCell.reuseIdentifier, for: indexPath)
             if let topItemCell = cell as? TopItemCell {
                 topItemCell.setup(to: item)

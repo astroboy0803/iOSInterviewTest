@@ -28,7 +28,6 @@
 		780D85282809104200379840 /* Manga-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D85272809104200379840 /* Manga-1.json */; };
 		780D852A2809106A00379840 /* Manga-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D85292809106A00379840 /* Manga-2.json */; };
 		780D852C2809107B00379840 /* Manga-3.json in Resources */ = {isa = PBXBuildFile; fileRef = 780D852B2809107B00379840 /* Manga-3.json */; };
-		7851EE4F2805624900320951 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EE4E2805624900320951 /* MainView.swift */; };
 		7851EE52280581A600320951 /* ServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EE51280581A600320951 /* ServicesProvider.swift */; };
 		7851EE55280581F100320951 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EE54280581F100320951 /* NetworkService.swift */; };
 		7851EE572805822800320951 /* NetworkServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EE562805822800320951 /* NetworkServiceType.swift */; };
@@ -40,6 +39,8 @@
 		78D174F62806E02D000C57CD /* Top.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D174F52806E02D000C57CD /* Top.swift */; };
 		78D174F828071DFF000C57CD /* TopItemCellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D174F728071DFF000C57CD /* TopItemCellable.swift */; };
 		78D174FA28072F4E000C57CD /* DateFormatterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D174F928072F4E000C57CD /* DateFormatterService.swift */; };
+		78D370FF2809A754008F2AD6 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78D370FE2809A754008F2AD6 /* MainViewController.xib */; };
+		78D371012809AFB5008F2AD6 /* TopItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78D371002809AFB5008F2AD6 /* TopItemCell.xib */; };
 		78F91C192806201E00E3C3DE /* TopItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F91C182806201E00E3C3DE /* TopItemCell.swift */; };
 		78F91C1C2806204C00E3C3DE /* TopItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F91C1B2806204C00E3C3DE /* TopItemViewModel.swift */; };
 		78F91C1E2806339C00E3C3DE /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F91C1D2806339C00E3C3DE /* Images.swift */; };
@@ -83,7 +84,6 @@
 		780D85272809104200379840 /* Manga-1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Manga-1.json"; sourceTree = "<group>"; };
 		780D85292809106A00379840 /* Manga-2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Manga-2.json"; sourceTree = "<group>"; };
 		780D852B2809107B00379840 /* Manga-3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Manga-3.json"; sourceTree = "<group>"; };
-		7851EE4E2805624900320951 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		7851EE51280581A600320951 /* ServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesProvider.swift; sourceTree = "<group>"; };
 		7851EE54280581F100320951 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		7851EE562805822800320951 /* NetworkServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceType.swift; sourceTree = "<group>"; };
@@ -95,6 +95,8 @@
 		78D174F52806E02D000C57CD /* Top.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Top.swift; sourceTree = "<group>"; };
 		78D174F728071DFF000C57CD /* TopItemCellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopItemCellable.swift; sourceTree = "<group>"; };
 		78D174F928072F4E000C57CD /* DateFormatterService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatterService.swift; sourceTree = "<group>"; };
+		78D370FE2809A754008F2AD6 /* MainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
+		78D371002809AFB5008F2AD6 /* TopItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopItemCell.xib; sourceTree = "<group>"; };
 		78F91C182806201E00E3C3DE /* TopItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopItemCell.swift; sourceTree = "<group>"; };
 		78F91C1B2806204C00E3C3DE /* TopItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopItemViewModel.swift; sourceTree = "<group>"; };
 		78F91C1D2806339C00E3C3DE /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
@@ -214,7 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				78D174F52806E02D000C57CD /* Top.swift */,
-				7851EE4E2805624900320951 /* MainView.swift */,
+				78D370FE2809A754008F2AD6 /* MainViewController.xib */,
 				780583AA28055FB100688F48 /* MainViewController.swift */,
 				78F91C2328063B0D00E3C3DE /* MainViewModel.swift */,
 				78F91C1B2806204C00E3C3DE /* TopItemViewModel.swift */,
@@ -275,6 +277,7 @@
 		78F91C1A2806203900E3C3DE /* TopItemCell */ = {
 			isa = PBXGroup;
 			children = (
+				78D371002809AFB5008F2AD6 /* TopItemCell.xib */,
 				78F91C182806201E00E3C3DE /* TopItemCell.swift */,
 				78D174F728071DFF000C57CD /* TopItemCellable.swift */,
 			);
@@ -363,6 +366,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				780583B328055FB100688F48 /* LaunchScreen.storyboard in Resources */,
+				78D370FF2809A754008F2AD6 /* MainViewController.xib in Resources */,
+				78D371012809AFB5008F2AD6 /* TopItemCell.xib in Resources */,
 				780583B028055FB100688F48 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,7 +398,6 @@
 				7851EE5E2805851700320951 /* ImageCache.swift in Sources */,
 				780583AB28055FB100688F48 /* MainViewController.swift in Sources */,
 				7851EE52280581A600320951 /* ServicesProvider.swift in Sources */,
-				7851EE4F2805624900320951 /* MainView.swift in Sources */,
 				780583A728055FB100688F48 /* AppDelegate.swift in Sources */,
 				78D174FA28072F4E000C57CD /* DateFormatterService.swift in Sources */,
 				78F91C20280633B700E3C3DE /* Pagination.swift in Sources */,
