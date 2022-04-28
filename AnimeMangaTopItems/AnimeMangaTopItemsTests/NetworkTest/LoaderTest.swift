@@ -5,13 +5,13 @@ import Combine
 class LoaderTest: XCTestCase {
 
     private var cancellables: Set<AnyCancellable> = []
-    
+
     private let session: URLSession = {
         let config: URLSessionConfiguration = .default
         config.protocolClasses = [URLProtocolMock.self]
         return URLSession(configuration: config)
     }()
-    
+
     private lazy var imgData: Data = {
         guard
             let imgURL = Bundle(for: NetworkServiceTest.self).url(forResource: "Gintama", withExtension: "jpeg"),
@@ -22,9 +22,9 @@ class LoaderTest: XCTestCase {
         }
         return data
     }()
-    
+
     private lazy var loader: ImageLoader = .init(session: session)
-    
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -33,7 +33,7 @@ class LoaderTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testSuccessLoadImage() throws {
+    func testSuccessLoadImage() {
         // given
         URLProtocolMock.handler = { request in
             guard let url = request.url else {
@@ -48,7 +48,7 @@ class LoaderTest: XCTestCase {
         }
         let expectation = self.expectation(description: "image loader expectation")
         var image: UIImage?
-        
+
         // when
         loader.loadImage(from: .init(fileURLWithPath: ""))
             .sink { value in
@@ -56,13 +56,13 @@ class LoaderTest: XCTestCase {
                 expectation.fulfill()
             }
             .store(in: &cancellables)
-        
+
         // then
         self.waitForExpectations(timeout: 1.0, handler: nil)
         XCTAssertNotNil(image)
     }
-    
-    func testFailLoadImage() throws {
+
+    func testFailLoadImage() {
         // given
         URLProtocolMock.handler = { request in
             guard let url = request.url else {
@@ -77,7 +77,7 @@ class LoaderTest: XCTestCase {
         }
         let expectation = self.expectation(description: "image loader expectation")
         var image: UIImage?
-        
+
         // when
         loader.loadImage(from: .init(fileURLWithPath: ""))
             .sink { value in
@@ -85,7 +85,7 @@ class LoaderTest: XCTestCase {
                 expectation.fulfill()
             }
             .store(in: &cancellables)
-        
+
         // then
         self.waitForExpectations(timeout: 1.0, handler: nil)
         XCTAssertNil(image)

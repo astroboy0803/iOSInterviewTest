@@ -3,6 +3,7 @@ import Foundation
 enum Top: Int, CaseIterable {
     case anime
     case manga
+    case favorite
 
     var title: String {
         switch self {
@@ -10,6 +11,8 @@ enum Top: Int, CaseIterable {
             return "Anime"
         case .manga:
             return "Manga"
+        case .favorite:
+            return "Favor"
         }
     }
 }

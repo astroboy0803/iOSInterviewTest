@@ -2,9 +2,9 @@ import Foundation
 import Combine
 
 internal final class NetworkService: NetworkServiceType {
-    
+
     private let session: URLSession
-    
+
     init(session: URLSession = URLSession(configuration: .ephemeral)) {
         self.session = session
     }

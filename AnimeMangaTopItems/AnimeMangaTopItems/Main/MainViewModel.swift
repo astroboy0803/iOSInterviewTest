@@ -3,24 +3,40 @@ import Combine
 
 internal final class MainViewModel {
 
+    enum SectionID: String {
+        case manga
+        case anime
+        case favorAnime = "Anime"
+        case favorManga = "Manga"
+    }
+
     private var cancellables: Set<AnyCancellable>
 
     private let currentTop: CurrentValueSubject<Top, Never>
 
-    private let animeItems: CurrentValueSubject<[TopItemViewModel], Never>
+    private let animeItems: CurrentValueSubject<[AnimeModel.AnimeData], Never>
 
-    private let mangaItems: CurrentValueSubject<[TopItemViewModel], Never>
+    private let mangaItems: CurrentValueSubject<[MangaModel.MangaData], Never>
 
-    private var items: [TopItemViewModel] {
+    private var sections: [TopSectionViewModel] {
         switch currentTop.value {
         case .anime:
-            return animeItems.value
+            return [
+                .init(sid: SectionID.anime.rawValue, top: .anime, datas: convert(animes: animeItems.value))
+            ]
         case .manga:
-            return mangaItems.value
+            return [
+                .init(sid: SectionID.anime.rawValue, top: .manga, datas: convert(mangas: mangaItems.value))
+            ]
+        case .favorite:
+            return [
+                .init(sid: SectionID.favorAnime.rawValue, top: .favorite, datas: convert(animes: UserDefaults.standard.animeItems)),
+                .init(sid: SectionID.favorManga.rawValue, top: .favorite, datas: convert(mangas: UserDefaults.standard.mangaItems))
+            ]
         }
     }
 
-    let dataSubject: PassthroughSubject<[TopItemViewModel], Never>
+    let dataSubject: CurrentValueSubject<[TopSectionViewModel], Never>
 
     let message: PassthroughSubject<String, Never>
 
@@ -38,15 +54,14 @@ internal final class MainViewModel {
 
     private let datePattern: String
 
-    private var favorAnimes: CurrentValueSubject<Set<String>, Never>
-
-    private var favorMangas: CurrentValueSubject<Set<String>, Never>
-
     init(top: Top, serviceProvider: ServicesProvider) {
         cancellables = []
+
+        // data
         animeItems = .init([])
         mangaItems = .init([])
-        dataSubject = .init()
+
+        dataSubject = .init([])
         currentTop = .init(top)
         message = .init()
         linkURL = .init()
@@ -59,41 +74,100 @@ internal final class MainViewModel {
         mangaLastPage = .max
         datePattern = "d LLL, yyyy"
 
-        favorAnimes = .init(Set(UserDefaults.standard.anime))
-        favorMangas = .init(Set(UserDefaults.standard.manga))
-
         setBinding()
     }
 
     private func setBinding() {
         currentTop
             .sink { top in
-                let items = self.items
-                self.dataSubject.send(items)
-                guard items.isEmpty else {
+                let sections = self.sections
+                self.dataSubject.send(sections)
+                switch top {
+                case .favorite:
                     return
+                case .anime, .manga:
+                    guard sections[0].datas.value.isEmpty else {
+                        return
+                    }
+                    self.download(top: top, page: 1)
                 }
-                self.download(top: top, page: 1)
             }
             .store(in: &cancellables)
+
         animeItems
-            .sink(receiveValue: showItems(top: .anime))
+            .sink { animes in
+                if self.currentTop.value == .anime {
+                    self.dataSubject.send([
+                        .init(sid: SectionID.anime.rawValue, top: .anime, datas: self.convert(animes: animes))
+                    ])
+                }
+            }
             .store(in: &cancellables)
+
         mangaItems
-            .sink(receiveValue: showItems(top: .manga))
-            .store(in: &cancellables)
-
-        favorAnimes
-            .sink { favors in
-                UserDefaults.standard.anime = Array(favors)
+            .sink { mangas in
+                if self.currentTop.value == .manga {
+                    self.dataSubject.send([
+                        .init(sid: SectionID.manga.rawValue, top: .manga, datas: self.convert(mangas: mangas))
+                    ])
+                }
             }
             .store(in: &cancellables)
+    }
 
-        favorMangas
-            .sink { favors in
-                UserDefaults.standard.manga = Array(favors)
+    private func convert(animes: [AnimeModel.AnimeData]) -> [TopItemViewModel] {
+        animes
+            .map {
+                let result: Result<URL, TopItemViewModel.URLEmpty>
+                if let urlString = $0.url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString) {
+                    result = .success(url)
+                } else {
+                    result = .failure(.invalid(msg: $0.url))
+                }
+                let start = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: $0.aired.from)
+                let end: String?
+                if let eDate = $0.aired.to {
+                    end = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: eDate)
+                } else {
+                    end = nil
+                }
+                let id = String($0.mal_id)
+                let isFavor = self.isFavor(top: .anime, id: id)
+                return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
             }
-            .store(in: &cancellables)
+    }
+
+    private func convert(mangas: [MangaModel.MangaData]) -> [TopItemViewModel] {
+        mangas
+            .map {
+                let result: Result<URL, TopItemViewModel.URLEmpty>
+                if let urlString = $0.url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString) {
+                    result = .success(url)
+                } else {
+                    result = .failure(.invalid(msg: $0.url))
+                }
+                let start = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: $0.published.from)
+                let end: String?
+                if let eDate = $0.published.to {
+                    end = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: eDate)
+                } else {
+                    end = nil
+                }
+                let id = String($0.mal_id)
+                let isFavor = isFavor(top: .manga, id: id)
+                return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
+            }
+    }
+
+    private func isFavor(top: Top, id: String) -> Bool {
+        switch top {
+        case .anime:
+            return UserDefaults.standard.animeItems.contains(where: { String($0.mal_id) == id })
+        case .manga:
+            return UserDefaults.standard.mangaItems.contains(where: { String($0.mal_id) == id })
+        case .favorite:
+            return true
+        }
     }
 
     private func download(top: Top, page: Int) {
@@ -107,25 +181,7 @@ internal final class MainViewModel {
                 .sink(receiveCompletion: doCompletion) { dataModel in
                     self.animeCurrentPage = dataModel.pagination.current_page
                     self.animeLastPage = dataModel.pagination.last_visible_page
-                    self.animeItems.value.append(contentsOf: dataModel.data
-                        .map {
-                            let result: Result<URL, TopItemViewModel.URLEmpty>
-                            if let urlString = $0.url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString) {
-                                result = .success(url)
-                            } else {
-                                result = .failure(.invalid(msg: $0.url))
-                            }
-                            let start = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: $0.aired.from)
-                            let end: String?
-                            if let eDate = $0.aired.to {
-                                end = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: eDate)
-                            } else {
-                                end = nil
-                            }
-                            let id = String($0.mal_id)
-                            let isFavor = self.favorAnimes.value.contains(id)
-                            return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
-                        })
+                    self.animeItems.value.append(contentsOf: dataModel.data)
                     self.isLoading.value = false
                 }
                 .store(in: &cancellables)
@@ -135,28 +191,12 @@ internal final class MainViewModel {
                 .sink(receiveCompletion: doCompletion) { dataModel in
                     self.mangaCurrentPage = dataModel.pagination.current_page
                     self.mangaLastPage = dataModel.pagination.last_visible_page
-                    self.mangaItems.value.append(contentsOf: dataModel.data
-                        .map {
-                            let result: Result<URL, TopItemViewModel.URLEmpty>
-                            if let urlString = $0.url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed), let url = URL(string: urlString) {
-                                result = .success(url)
-                            } else {
-                                result = .failure(.invalid(msg: $0.url))
-                            }
-                            let start = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: $0.published.from)
-                            let end: String?
-                            if let eDate = $0.published.to {
-                                end = self.serviceProvider.dateFormatter.string(dateFormat: self.datePattern, date: eDate)
-                            } else {
-                                end = nil
-                            }
-                            let id = String($0.mal_id)
-                            let isFavor = self.favorMangas.value.contains(id)
-                            return .init(id: id, title: $0.title, rank: $0.rank, start: start, end: end, isFavor: isFavor, url: result, loader: self.serviceProvider.loader.loadImage(from: $0.images.jpg.image_url))
-                        })
+                    self.mangaItems.value.append(contentsOf: dataModel.data)
                     self.isLoading.value = false
                 }
                 .store(in: &cancellables)
+        case .favorite:
+            break
         }
     }
 
@@ -173,16 +213,8 @@ internal final class MainViewModel {
         }
     }
 
-    private func showItems(top: Top) -> ([TopItemViewModel]) -> Void {
-        return { items in
-            if self.currentTop.value == top {
-                self.dataSubject.send(items)
-            }
-        }
-    }
-
     // MARK: - Input
-    
+
     // MARK: 切換顯示內容
     func change(top: Top) {
         guard top != self.currentTop.value else {
@@ -202,31 +234,72 @@ internal final class MainViewModel {
     }
 
     // MARK: 加入或移除我的最愛
-    func favor(id: String, isFavor: Bool) {
-        let favorSubject: CurrentValueSubject<Set<String>, Never>
-        let itemSubject: CurrentValueSubject<[TopItemViewModel], Never>
-        switch currentTop.value {
+    func favor(indexPath: IndexPath, isFavor: Bool) {
+        let top = currentTop.value
+        switch top {
         case .anime:
-            favorSubject = favorAnimes
-            itemSubject = animeItems
+            updateTopItem(indexPath: indexPath, isFavor: isFavor)
         case .manga:
-            favorSubject = favorMangas
-            itemSubject = mangaItems
+            updateTopItem(indexPath: indexPath, isFavor: isFavor)
+        case .favorite:
+            break
         }
-        if isFavor && !favorSubject.value.contains(id) {
-            favorSubject.value.insert(id)
-        } else if !isFavor && favorSubject.value.contains(id) {
-            favorSubject.value.remove(id)
+        updateStore(indexPath: indexPath, top: top, isFavor: isFavor)
+    }
+
+    private func updateTopItem(indexPath: IndexPath, isFavor: Bool) {
+        item(indexPath: indexPath).isFavor = isFavor
+    }
+
+    private func updateStore(indexPath: IndexPath, top: Top, isFavor: Bool) {
+        switch top {
+        case .anime:
+            var animeDatas = UserDefaults.standard.animeItems
+            let item = animeItems.value[indexPath.item]
+            let index = animeDatas.firstIndex {
+                $0.mal_id == item.mal_id
+            }
+            if isFavor && index == nil {
+                animeDatas.append(item)
+            } else if !isFavor, let index = index {
+                animeDatas.remove(at: index)
+            }
+            UserDefaults.standard.animeItems = animeDatas
+        case .manga:
+            var mangaDatas = UserDefaults.standard.mangaItems
+            let item = mangaItems.value[indexPath.item]
+            let index = mangaDatas.firstIndex {
+                $0.mal_id == item.mal_id
+            }
+            if isFavor && index == nil {
+                mangaDatas.append(item)
+            } else if !isFavor, let index = index {
+                mangaDatas.remove(at: index)
+            }
+            UserDefaults.standard.mangaItems = mangaDatas
+        case .favorite:
+            guard let aTop = Top(rawValue: indexPath.section) else {
+                return
+            }
+            switch aTop {
+            case .anime:
+                var datas = UserDefaults.standard.animeItems
+                datas.remove(at: indexPath.item)
+                UserDefaults.standard.animeItems = datas
+            case .manga:
+                var datas = UserDefaults.standard.mangaItems
+                datas.remove(at: indexPath.item)
+                UserDefaults.standard.mangaItems = datas
+            case .favorite:
+                break
+            }
+            self.dataSubject.send(sections)
         }
-        guard let index = itemSubject.value.firstIndex(where: { $0.id == id }) else {
-            return
-        }
-        itemSubject.value[index].isFavor = isFavor
     }
 
     // MARK: 取得selected cell的資料
     func item(indexPath: IndexPath) -> TopItemViewModel {
-        self.items[indexPath.item]
+        dataSubject.value[indexPath.section].datas.value[indexPath.item]
     }
 
     // MARK: 擷取更多資料
@@ -242,26 +315,59 @@ internal final class MainViewModel {
                 return
             }
             self.download(top: .manga, page: mangaCurrentPage + 1)
+        case .favorite:
+            return
         }
     }
 }
 
 extension UserDefaults {
-    var anime: [String] {
+
+    private var animeItemsKey: String {
+        "__animeItemsKey__"
+    }
+
+    private var mangaItemsKey: String {
+        "__mangaItemsKey__"
+    }
+
+    var animeItems: [AnimeModel.AnimeData] {
         get {
-            value(forKey: "anime") as? [String] ?? []
+            guard
+                let jsonData = data(forKey: animeItemsKey),
+                let items = try? JSONDecoder().decode([AnimeModel.AnimeData].self, from: jsonData)
+            else {
+                return []
+            }
+            return items.sorted {
+                $0.rank < $1.rank
+            }
         }
         set {
-            set(newValue, forKey: "anime")
+            guard let jsonData = try? JSONEncoder().encode(newValue) else {
+                return
+            }
+            set(jsonData, forKey: animeItemsKey)
         }
     }
 
-    var manga: [String] {
+    var mangaItems: [MangaModel.MangaData] {
         get {
-            value(forKey: "manga") as? [String] ?? []
+            guard
+                let jsonData = data(forKey: mangaItemsKey),
+                let items = try? JSONDecoder().decode([MangaModel.MangaData].self, from: jsonData)
+            else {
+                return []
+            }
+            return items.sorted {
+                $0.rank < $1.rank
+            }
         }
         set {
-            set(newValue, forKey: "manga")
+            guard let jsonData = try? JSONEncoder().encode(newValue) else {
+                return
+            }
+            set(jsonData, forKey: mangaItemsKey)
         }
     }
 }

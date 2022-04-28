@@ -5,15 +5,15 @@ import Combine
 class NetworkServiceTest: XCTestCase {
 
     private var cancellables: Set<AnyCancellable> = []
-    
+
     private let session: URLSession = {
         let config: URLSessionConfiguration = .ephemeral
         config.protocolClasses = [URLProtocolMock.self]
         return URLSession(configuration: config)
     }()
-    
+
     private lazy var network: NetworkService = .init(session: session)
-    
+
     private lazy var animeJsonData: Data = {
         guard
             let jsonURL = Bundle(for: NetworkServiceTest.self).url(forResource: "Anime", withExtension: "json"),
@@ -24,7 +24,7 @@ class NetworkServiceTest: XCTestCase {
         }
         return data
     }()
-    
+
     private lazy var mangaJsonData: Data = {
         guard
             let jsonURL = Bundle(for: NetworkServiceTest.self).url(forResource: "Manga", withExtension: "json"),
@@ -35,21 +35,21 @@ class NetworkServiceTest: XCTestCase {
         }
         return data
     }()
-        
+
     override func setUpWithError() throws {
 
     }
 
     override func tearDownWithError() throws {
-        
+
     }
 
-    func testAnimeSuccess() throws {
+    func testAnimeSuccess() {
         // given
         URLProtocolMock.handler = getSuccessHandler(jsonData: animeJsonData)
         let expectation = self.expectation(description: "anime network service expectation")
         var result: Result<AnimeModel, Error>?
-        
+
         // when
         network.fetchAnime(page: 1)
             .map { animeModel -> Result<AnimeModel, Error> in
@@ -64,7 +64,7 @@ class NetworkServiceTest: XCTestCase {
                 expectation.fulfill()
             }
             .store(in: &cancellables)
-        
+
         // then
         self.waitForExpectations(timeout: 1.0, handler: nil)
         guard case let .success(animeModel) = result else {
@@ -73,13 +73,13 @@ class NetworkServiceTest: XCTestCase {
         }
         XCTAssertEqual(animeModel.data.count, 25)
     }
-    
-    func testMangaSuccess() throws {
+
+    func testMangaSuccess() {
         // given
         URLProtocolMock.handler = getSuccessHandler(jsonData: mangaJsonData)
         let expectation = self.expectation(description: "manga network service expectation")
         var result: Result<MangaModel, Error>?
-        
+
         // when
         network.fetchManga(page: 1)
             .map { mangaModel -> Result<MangaModel, Error> in
@@ -94,7 +94,7 @@ class NetworkServiceTest: XCTestCase {
                 expectation.fulfill()
             }
             .store(in: &cancellables)
-        
+
         // then
         self.waitForExpectations(timeout: 1.0, handler: nil)
         guard case let .success(mangaModel) = result else {
@@ -103,7 +103,7 @@ class NetworkServiceTest: XCTestCase {
         }
         XCTAssertEqual(mangaModel.data.count, 25)
     }
-    
+
     private func getSuccessHandler(jsonData: Data) -> URLProtocolMock.networkHandler {
          { request in
             guard let url = request.url else {
@@ -117,13 +117,13 @@ class NetworkServiceTest: XCTestCase {
             return (resp, jsonData)
         }
     }
-    
-    func testAnimeFail() throws {
+
+    func testAnimeFail() {
         // given
         URLProtocolMock.handler = getFailHandler()
         let expectation = self.expectation(description: "anime network service expectation")
         var result: Result<AnimeModel, Error>?
-        
+
         // when
         network.fetchAnime(page: 1)
             .map { animeModel -> Result<AnimeModel, Error> in
@@ -138,7 +138,7 @@ class NetworkServiceTest: XCTestCase {
                 expectation.fulfill()
             }
             .store(in: &cancellables)
-        
+
         // then
         self.waitForExpectations(timeout: 1.0, handler: nil)
         guard
@@ -150,13 +150,13 @@ class NetworkServiceTest: XCTestCase {
             return
         }
     }
-    
-    func testMangaFail() throws {
+
+    func testMangaFail() {
         // given
         URLProtocolMock.handler = getFailHandler()
         let expectation = self.expectation(description: "manga network service expectation")
         var result: Result<MangaModel, Error>?
-        
+
         // when
         network.fetchManga(page: 1)
             .map { mangaModel -> Result<MangaModel, Error> in
@@ -171,7 +171,7 @@ class NetworkServiceTest: XCTestCase {
                 expectation.fulfill()
             }
             .store(in: &cancellables)
-        
+
         // then
         self.waitForExpectations(timeout: 1.0, handler: nil)
         guard
@@ -183,7 +183,7 @@ class NetworkServiceTest: XCTestCase {
             return
         }
     }
-    
+
     private func getFailHandler() -> URLProtocolMock.networkHandler {
          { request in
             guard let url = request.url else {

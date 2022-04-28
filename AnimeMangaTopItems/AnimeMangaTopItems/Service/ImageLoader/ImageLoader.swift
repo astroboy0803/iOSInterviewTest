@@ -4,7 +4,7 @@ import Combine
 internal final class ImageLoader: ImageLoaderType {
 
     private let cache: ImageCacheType
-    
+
     private let session: URLSession
 
     init(session: URLSession = URLSession.shared, cache: ImageCacheType = ImageCache()) {

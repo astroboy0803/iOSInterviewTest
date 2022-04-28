@@ -13,7 +13,7 @@ internal class TopItemViewModel: TopItemCellable {
     var isFavor: Bool
     let url: Result<URL, URLEmpty>
     let loader: AnyPublisher<UIImage?, Never>
-    
+
     internal init(id: String, title: String, rank: Int, start: String, end: String?, isFavor: Bool, url: Result<URL, TopItemViewModel.URLEmpty>, loader: AnyPublisher<UIImage?, Never>) {
         self.id = id
         self.title = title
@@ -24,7 +24,6 @@ internal class TopItemViewModel: TopItemCellable {
         self.url = url
         self.loader = loader
     }
-
 }
 
 extension TopItemViewModel: Hashable {

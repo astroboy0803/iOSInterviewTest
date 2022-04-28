@@ -1,11 +1,11 @@
 import Foundation
 
 internal final class URLProtocolMock: URLProtocol {
-    
+
     typealias networkHandler = (URLRequest) throws -> (HTTPURLResponse, Data?)
-    
+
     static var handler: networkHandler?
-    
+
     override class func canInit(with request: URLRequest) -> Bool {
         return true
     }
@@ -13,7 +13,7 @@ internal final class URLProtocolMock: URLProtocol {
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
-    
+
     override func startLoading() {
         guard let handler = URLProtocolMock.handler else {
             assertionFailure("沒有提供URLProtocol Mock Handler")
@@ -31,8 +31,8 @@ internal final class URLProtocolMock: URLProtocol {
             client?.urlProtocol(self, didFailWithError: error)
         }
     }
-    
+
     override func stopLoading() {
-        
+
     }
 }
