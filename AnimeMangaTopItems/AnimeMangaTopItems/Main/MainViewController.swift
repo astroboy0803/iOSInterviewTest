@@ -45,7 +45,7 @@ class MainViewController: UIViewController {
 
     private func setBinding() {
         mainView.selected
-            .sink { value in
+            .sink { [unowned self] value in
                 guard let top = Top(rawValue: value) else {
                     return
                 }
@@ -56,7 +56,7 @@ class MainViewController: UIViewController {
 
         viewModel.isLoading
             .receive(on: DispatchQueue.main)
-            .sink { value in
+            .sink { [unowned self] value in
                 if value {
                     self.mainView.startAnimate()
                 } else {
@@ -72,7 +72,7 @@ class MainViewController: UIViewController {
 
         viewModel.message
             .receive(on: DispatchQueue.main)
-            .sink { message in
+            .sink { [unowned self] message in
                 let alert = UIAlertController(title: message, message: "", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "確定", style: .default, handler: nil)
                 alert.addAction(okAction)
@@ -82,7 +82,7 @@ class MainViewController: UIViewController {
 
         viewModel.linkURL
             .receive(on: DispatchQueue.main)
-            .sink { url in
+            .sink { [unowned self] url in
                 let safariVC = SFSafariViewController(url: url)
                 safariVC.modalPresentationStyle = .popover
                 self.present(safariVC, animated: true)
@@ -127,7 +127,7 @@ extension MainViewController {
                 self.cellCancellables[topItemCell.cellID]?.cancel()
                 self.cellCancellables.removeValue(forKey: topItemCell.cellID)
                 self.cellCancellables[topItemCell.cellID] = topItemCell.isFavor
-                    .sink(receiveValue: { info in
+                    .sink(receiveValue: { [unowned self] info in
                         guard
                             info.dataID == item.id,
                             info.isFavor != item.isFavor

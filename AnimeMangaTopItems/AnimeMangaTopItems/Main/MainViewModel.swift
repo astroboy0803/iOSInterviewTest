@@ -79,7 +79,7 @@ internal final class MainViewModel {
 
     private func setBinding() {
         currentTop
-            .sink { top in
+            .sink { [unowned self] top in
                 let sections = self.sections
                 self.dataSubject.send(sections)
                 switch top {
@@ -95,7 +95,7 @@ internal final class MainViewModel {
             .store(in: &cancellables)
 
         animeItems
-            .sink { animes in
+            .sink { [unowned self] animes in
                 if self.currentTop.value == .anime {
                     self.dataSubject.send([
                         .init(sid: SectionID.anime.rawValue, top: .anime, datas: self.convert(animes: animes))
@@ -105,7 +105,7 @@ internal final class MainViewModel {
             .store(in: &cancellables)
 
         mangaItems
-            .sink { mangas in
+            .sink { [unowned self] mangas in
                 if self.currentTop.value == .manga {
                     self.dataSubject.send([
                         .init(sid: SectionID.manga.rawValue, top: .manga, datas: self.convert(mangas: mangas))
